@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        <script src="{{ url_for('static', filename='script.js') }}">
+</script>
+
+        <title>{% block title %}Expense Tracker{% endblock %}</title>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Expense Tracker</h1>
+            </header>
+            <nav>
+                <a class="active" href="{{ url_for('home') }}" title="Home">Home</a>
+                <a href="{{ url_for('wishlist') }}" title="Wish List">Wish List</a>
+                <a href="{{ url_for('login') }}" title="Login">Login</a>
+            </nav>
+            <main>
+                {% with messages = get_flashed_messages(with_categories=true) %} 
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </body>
+</html>
