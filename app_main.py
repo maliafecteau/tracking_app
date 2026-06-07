@@ -2,7 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
-@app.route('/')
+logged_in = False
+
+if logged_in:
+    @app.route('/')
+    def home():
+        return render_template('home.html')
+else:
+    @app.route('/')
+    def login_redirect():
+        return redirect(url_for('login'))
+
+@app.route('/home')
 def home():
     return render_template('home.html')
 
