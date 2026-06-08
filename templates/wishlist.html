@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Wishlist{% endblock%}
+{% block header %}Your Wishlist{% endblock %}
+
+{% block content %}
+    <p>Here you can view and manage your wishlist items.</p>
+    <!-- Wishlist list and management features will go here -->
+     <table class="wishlist-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>New Laptop</td>
+                <td>$1200.00</td>
+                <td>Need</td>
+            </tr>
+            <tr>
+                <td>Headphones</td>
+                <td>$200.00</td>
+                <td>Want- Low</td>
+            </tr>
+            <tr>
+                <td>Smartphone</td>
+                <td>$800.00</td>
+                <td>Want- High</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

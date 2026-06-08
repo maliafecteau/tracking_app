@@ -50,6 +50,10 @@ def logout():
 def expenses():
     return render_template('expenses.html')
 
+@app.route('/splashpage')
+def splashpage():
+    return render_template('splashpage.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
     
