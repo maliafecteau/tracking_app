@@ -66,13 +66,14 @@ def register():
         return f'Account created for {name}'
     return render_template('register.html')
 
- @app.route('/expenses')
+@app.route('/expenses')
 def expenses():
     return render_template('expenses.html')
 
 @app.route('/splashpage')
 def splashpage():
     return render_template('splashpage.html')
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
