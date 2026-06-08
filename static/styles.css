@@ -8,6 +8,13 @@ body {
     width: 100vw;
 }
 
+p {
+    font-size: 1rem;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 0.5rem;
+}
+
 .container {
     margin: auto;
 	display: flex;
@@ -32,16 +39,17 @@ main {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     color: rgb(0, 0, 0);
     padding: 1rem;
     text-align: center;
 }
 
 h2 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: rgb(0, 0, 0);
     padding: 0.5rem;
+    text-align: center;
 }
 
 nav {
@@ -106,4 +114,16 @@ input[type="text"], input[type="password"], input[type="email"] {
     border: 2px solid rgb(210, 188, 151);
     border-radius: 5px;
     width: 90%;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    border: 1px solid rgb(210, 188, 151);
+    padding: 10px;
+    text-align: left;
 }

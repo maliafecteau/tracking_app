@@ -42,7 +42,8 @@
         <button type="submit">Register</button>
     </form>
     
-    <div class="back-link">
-        <a href="{{ url_for('login') }}">← Back to Login</a>
-    </div>
+    <p>Already have an account?</p>
+    <a href="{{ url_for('login') }}"> <!-- Link to login page -->
+        <button>Login here</button>
+    </a>
 {% endblock %}
