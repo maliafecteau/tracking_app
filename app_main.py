@@ -19,7 +19,7 @@ class User(db.Model): #user model for registration and login
 def index():
     if 'user_id' in session:
         return render_template('home.html')# If the user is logged in, show the home page
-    return redirect(url_for('login'))# If the user is not logged in, redirect to the login page
+    return redirect(url_for('splashpage'))# If the user is not logged in, redirect to the splash page
 
 @app.route('/home')
 def home():
@@ -66,6 +66,13 @@ def register():
         return f'Account created for {name}'
     return render_template('register.html')
 
+ @app.route('/expenses')
+def expenses():
+    return render_template('expenses.html')
+
+@app.route('/splashpage')
+def splashpage():
+    return render_template('splashpage.html')
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
