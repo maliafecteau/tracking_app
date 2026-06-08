@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-        <script src="{{ url_for('static', filename='script.js') }}">
-</script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- sets the viewport for responsive design -->
+        <meta name="viewport" content="height=device-height, initial-scale=1.0"> <!-- sets the viewport height for better mobile support -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  <!-- links the stylesheet in static to this base html with flask/python-->
+        <script src="{{ url_for('static', filename='script.js') }}"> </script> <!-- javascript file in static -->
 
         <title>{% block title %}{% endblock %} - Expense Tracker</title>
     </head>
@@ -14,18 +14,19 @@
                 <h1>{% block header %}{% endblock %}</h1>
             </header>
             <main>
-                {% with messages = get_flashed_messages(with_categories=true) %} 
+                {% with messages = get_flashed_messages(with_categories=true) %} <!-- this block is for displaying flash messages in the inspector -->
                     {% if messages %}
                         {% for category, message in messages %}
-                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                            <div class="alert alert-{{ category }}">{{ message }}</div> <!-- this part categorises and sorts the alerts by type so they can be read easier -->
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
                 {% block content %}{% endblock %}
             </main>
-            <nav>
+            <nav> <!-- nav that can be moved to the top using styling with @media queries when screen gets larger-->
                 <a href="{{ url_for('home') }}" title="Home">Home</a>
-                <a href="{{ url_for('wishlist') }}" title="Wish List">Wish List</a>
+                <a href="{{ url_for('expenses') }}" title="Expenses">Expenses</a>
+                <a href="{{ url_for('wishlist') }}" title="Wishlist">Wish List</a>
                 <a href="{{ url_for('login') }}" title="Login">Login</a>
             </nav>
         </div>

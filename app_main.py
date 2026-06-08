@@ -10,8 +10,8 @@ if logged_in:
         return render_template('home.html')
 else:
     @app.route('/')
-    def login_redirect():
-        return redirect(url_for('login'))
+    def splash():
+        return render_template('splashpage.html')
 
 @app.route('/home')
 def home():
@@ -39,6 +39,16 @@ def register():
         # Process registration
         return f'Account created for {name}'
     return render_template('register.html')
+
+@app.route('/logout')
+def logout():
+    global logged_in
+    logged_in = False
+    return redirect(url_for('login'))
+
+@app.route('/expenses')
+def expenses():
+    return render_template('expenses.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
