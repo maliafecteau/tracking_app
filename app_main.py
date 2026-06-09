@@ -11,8 +11,13 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
+class Income(db.Model): #database model for Incom
+    income_id = db.Column(db.Integer, primary_key=True)#ic
+    amount =db.Column(db.Float, nullable=False)
+    date = db.Column(db.string(20), nullable= False)
+    user_id =db.Column(db.Interger, db.ForeignKey("user.id"), nullable =False)
 
-class Expense(db.Model):
+class Expense(db.Model): #db model for expense
     ex_id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(200), nullable=False)
     amount = db.Column(db.Float, nullable=False)
@@ -25,7 +30,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     expenses = db.relationship("Expense", backref="user", lazy=True)
-
+    income = db.relationship('income', backref="user", lazy=True)
 
 
 
@@ -136,6 +141,35 @@ def delete_expense(expense_id):
         flash("Expense deleted successfully.", "success")
     return redirect(url_for("expenses_view"))
 
+@app.route("/income", methods=["GET","POST"])
+@login_required
+def income():
+    amount = request.form.get("amount", "").strip()
+    date = request.form.get('data',"").strip()
+    
+    if not amount or not date:
+        flash("all fields are required", " error")
+        return redirect(url_for("home.html"))# placeholder
+    try:
+        amount_value = float(amount)
+    except ValueError:
+        flash("amount must be a vvalid numver ","error")
+        return redirect (url_for("home.html"))
+    
+    income =Income(
+        amount=amount_value
+        date=date,
+        user_id=session["user_id"]
+    )
+    db.session.add(income)
+    db.session.commit()
+
+    flash(" Expense added successfully.", "success")
+    return render_template(url_for("home.html"))
+
+    income = Income.query.filter_by(user_id=session["user_id"]).all() 
+    return render_template("home.html", income=income)
+    
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
