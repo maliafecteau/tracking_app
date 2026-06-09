@@ -1,37 +1,68 @@
 {% extends "base.html" %}
 
-{% block title %}Expenses{% endblock%}
+{% block title %}Expenses{% endblock %}
 
 {% block header %}Your Expenses{% endblock %}
 
 {% block content %}
     <p>Here you can view, manage, and log your expenses.</p>
-    <!-- Expense list and management features will go here -->
-     <table>
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Groceries</td>
-                <td>$50.00</td>
-                <td>2024-06-01</td>
-            </tr>
-            <tr>
-                <td>Electricity Bill</td>
-                <td>$75.00</td>
-                <td>2024-06-05</td>
-            </tr>
-            <tr>
-                <td>Dining Out</td>
-                <td>$30.00</td>
-                <td>2024-06-10</td>
-            </tr>
-        </tbody>
-    </table>
 
+    <section class="expense-form">
+        {% if edit_expense %}
+            <h2>Edit Expense</h2>
+            <form method="post" action="{{ url_for('edit_expense', expense_id=edit_expense.id) }}">
+        {% else %}
+            <h2>Add New Expense</h2>
+            <form method="post" action="{{ url_for('expenses_view') }}">
+        {% endif %}
+            <div>
+                <label for="description">Description</label>
+                <input id="description" name="description" type="text" required value="{{ edit_expense.description if edit_expense else '' }}">
+            </div>
+            <div>
+                <label for="amount">Amount</label>
+                <input id="amount" name="amount" type="number" step="0.01" required value="{{ edit_expense.amount if edit_expense else '' }}">
+            </div>
+            <div>
+                <label for="date">Date</label>
+                <input id="date" name="date" type="date" required value="{{ edit_expense.date if edit_expense else '' }}">
+            </div>
+            <button type="submit">{% if edit_expense %}Update Expense{% else %}Add Expense{% endif %}</button>
+            {% if edit_expense %}
+                <a href="{{ url_for('expenses_view') }}">Cancel</a>
+            {% endif %}
+        </form>
+    </section>
+
+    <section class="expense-list">
+        {% if expenses %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                        <tr>
+                            <td>{{ expense.description }}</td>
+                            <td>${{ expense.amount }}</td>
+                            <td>{{ expense.date }}</td>
+                            <td>
+                                <a href="{{ url_for('edit_expense', expense_id=expense.id) }}">Edit</a>
+                                <form method="post" action="{{ url_for('delete_expense', expense_id=expense.id) }}" style="display:inline">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No expenses yet. Use the form above to add one.</p>
+        {% endif %}
+    </section>
 {% endblock %}
