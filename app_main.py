@@ -11,8 +11,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
-expenses = []
-next_expense_id = 1
+
 
 
 class User(db.Model):
@@ -20,7 +19,14 @@ class User(db.Model):
     name = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    expenses = db.relationship("expenses", backref="user", lazy=True)
 
+class Expense(db.Model):
+    ex_id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(200), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 def login_required(view):
     @wraps(view)
@@ -54,8 +60,6 @@ def wishlist():
 @app.route("/expenses", methods=["GET", "POST"])
 @login_required
 def expenses_view():
-    global next_expense_id
-
     if request.method == "POST":
         description = request.form.get("description", "").strip()
         amount = request.form.get("amount", "").strip()
@@ -71,25 +75,26 @@ def expenses_view():
             flash("Amount must be a valid number.", "error")
             return redirect(url_for("expenses_view"))
 
-        expenses.append(
-            {
-                "id": next_expense_id,
-                "description": description,
-                "amount": f"{amount_value:.2f}",
-                "date": date,
-            }
+        expense = Expense(
+            description=description,
+            amount=amount_value,
+            date=date,
+            user_id=session["user_id"]
         )
-        next_expense_id += 1
+        db.session.add(expense)
+        db.session.commit()
+
         flash("Expense added successfully.", "success")
         return redirect(url_for("expenses_view"))
 
+    expenses = Expense.query.filter_by(user_id=session["user_id"]).all()
     return render_template("expenses.html", expenses=expenses, edit_expense=None)
 
 
 @app.route("/expenses/edit/<int:expense_id>", methods=["GET", "POST"])
 @login_required
 def edit_expense(expense_id):
-    expense = next((item for item in expenses if item["id"] == expense_id), None)
+    expense = Expense.query.filter_by(ex_id=expense_id, user_id=session["user_id"]).first()
     if not expense:
         flash("Expense not found.", "error")
         return redirect(url_for("expenses_view"))
@@ -109,9 +114,10 @@ def edit_expense(expense_id):
             flash("Amount must be a valid number.", "error")
             return redirect(url_for("edit_expense", expense_id=expense_id))
 
-        expense["description"] = description
-        expense["amount"] = f"{amount_value:.2f}"
-        expense["date"] = date
+        expense.description = description
+        expense.amount = amount_value
+        expense.date = date
+        db.session.commit()
         flash("Expense updated successfully.", "success")
         return redirect(url_for("expenses_view"))
 
@@ -122,8 +128,11 @@ def edit_expense(expense_id):
 @login_required
 def delete_expense(expense_id):
     global expenses
-    expenses = [item for item in expenses if item["id"] != expense_id]
-    flash("Expense deleted successfully.", "success")
+    expense = Expense.query.filter_by(id=expense_id, user_id=session["user_id"]).first()
+    if expense:
+        db.session.delete(expense)
+        db.session.commit()
+        flash("Expense deleted successfully.", "success")
     return redirect(url_for("expenses_view"))
 
 
