@@ -28,6 +28,19 @@ def login_required(view):
 
     return wrapped_view
 
+db = SQLAlchemy(app)
+
+class User(db.Model): #user model for registration and login
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+
+@app.route('/')
+def index():
+    if 'user_id' in session:
+        return render_template('home.html')# If the user is logged in, show the home page
+    return redirect(url_for('login'))# If the user is not logged in, redirect to the login page
 
 @app.route("/")
 def index():
