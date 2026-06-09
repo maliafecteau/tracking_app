@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -10,6 +10,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracking_app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
+expenses = []
+next_expense_id = 1
 
 
 class User(db.Model):
@@ -28,19 +31,6 @@ def login_required(view):
 
     return wrapped_view
 
-db = SQLAlchemy(app)
-
-class User(db.Model): #user model for registration and login
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-
-@app.route('/')
-def index():
-    if 'user_id' in session:
-        return render_template('home.html')# If the user is logged in, show the home page
-    return redirect(url_for('login'))# If the user is not logged in, redirect to the login page
 
 @app.route("/")
 def index():
@@ -61,10 +51,80 @@ def wishlist():
     return render_template("wishlist.html")
 
 
-@app.route("/expenses")
+@app.route("/expenses", methods=["GET", "POST"])
 @login_required
-def expenses():
-    return render_template("expenses.html")
+def expenses_view():
+    global next_expense_id
+
+    if request.method == "POST":
+        description = request.form.get("description", "").strip()
+        amount = request.form.get("amount", "").strip()
+        date = request.form.get("date", "").strip()
+
+        if not description or not amount or not date:
+            flash("All fields are required.", "error")
+            return redirect(url_for("expenses_view"))
+
+        try:
+            amount_value = float(amount)
+        except ValueError:
+            flash("Amount must be a valid number.", "error")
+            return redirect(url_for("expenses_view"))
+
+        expenses.append(
+            {
+                "id": next_expense_id,
+                "description": description,
+                "amount": f"{amount_value:.2f}",
+                "date": date,
+            }
+        )
+        next_expense_id += 1
+        flash("Expense added successfully.", "success")
+        return redirect(url_for("expenses_view"))
+
+    return render_template("expenses.html", expenses=expenses, edit_expense=None)
+
+
+@app.route("/expenses/edit/<int:expense_id>", methods=["GET", "POST"])
+@login_required
+def edit_expense(expense_id):
+    expense = next((item for item in expenses if item["id"] == expense_id), None)
+    if not expense:
+        flash("Expense not found.", "error")
+        return redirect(url_for("expenses_view"))
+
+    if request.method == "POST":
+        description = request.form.get("description", "").strip()
+        amount = request.form.get("amount", "").strip()
+        date = request.form.get("date", "").strip()
+
+        if not description or not amount or not date:
+            flash("All fields are required.", "error")
+            return redirect(url_for("edit_expense", expense_id=expense_id))
+
+        try:
+            amount_value = float(amount)
+        except ValueError:
+            flash("Amount must be a valid number.", "error")
+            return redirect(url_for("edit_expense", expense_id=expense_id))
+
+        expense["description"] = description
+        expense["amount"] = f"{amount_value:.2f}"
+        expense["date"] = date
+        flash("Expense updated successfully.", "success")
+        return redirect(url_for("expenses_view"))
+
+    return render_template("expenses.html", expenses=expenses, edit_expense=expense)
+
+
+@app.route("/expenses/delete/<int:expense_id>", methods=["POST"])
+@login_required
+def delete_expense(expense_id):
+    global expenses
+    expenses = [item for item in expenses if item["id"] != expense_id]
+    flash("Expense deleted successfully.", "success")
+    return redirect(url_for("expenses_view"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -122,4 +182,3 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-    
