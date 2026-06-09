@@ -1,6 +1,6 @@
 from functools import wraps
 
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -13,11 +13,21 @@ db = SQLAlchemy()
 db.init_app(app)
 
 
-class User(db.Model):# User model for authentication
-    id = db.Column(db.Integer, primary_key=True)# Unique identifier for each user
-    name = db.Column(db.String(100), unique=True, nullable=False)#` Username of the user, must be unique and cannot be null`
-    email = db.Column(db.String(120), unique=True, nullable=False)# Email of the user, must be unique and cannot be null
-    password = db.Column(db.String(200), nullable=False)# Password of the user, cannot be null
+class Expense(db.Model):
+    ex_id = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(200), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.String(20), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    expenses = db.relationship("Expense", backref="user", lazy=True)
+
+
 
 
 def login_required(view):# Decorator to ensure that a user is logged in before accessing certain routes
@@ -49,10 +59,83 @@ def wishlist():
     return render_template("wishlist.html")
 
 
-@app.route("/expenses")
-@login_required# The expenses route is protected by the login_required decorator, ensuring that only authenticated users can access it
-def expenses():
-    return render_template("expenses.html")
+@app.route("/expenses", methods=["GET", "POST"])
+@login_required
+def expenses_view():
+    if request.method == "POST":
+        description = request.form.get("description", "").strip()
+        amount = request.form.get("amount", "").strip()
+        date = request.form.get("date", "").strip()
+
+        if not description or not amount or not date:
+            flash("All fields are required.", "error")
+            return redirect(url_for("expenses_view"))
+
+        try:
+            amount_value = float(amount)
+        except ValueError:
+            flash("Amount must be a valid number.", "error")
+            return redirect(url_for("expenses_view"))
+
+        expense = Expense(
+            description=description,
+            amount=amount_value,
+            date=date,
+            user_id=session["user_id"]
+        )
+        db.session.add(expense)
+        db.session.commit()
+
+        flash("Expense added successfully.", "success")
+        return redirect(url_for("expenses_view"))
+
+    expenses = Expense.query.filter_by(user_id=session["user_id"]).all()
+    return render_template("expenses.html", expenses=expenses, edit_expense=None)
+
+
+@app.route("/expenses/edit/<int:expense_id>", methods=["GET", "POST"])
+@login_required
+def edit_expense(expense_id):
+    expense = Expense.query.filter_by(ex_id=expense_id, user_id=session["user_id"]).first()
+    if not expense:
+        flash("Expense not found.", "error")
+        return redirect(url_for("expenses_view"))
+
+    if request.method == "POST":
+        description = request.form.get("description", "").strip()
+        amount = request.form.get("amount", "").strip()
+        date = request.form.get("date", "").strip()
+
+        if not description or not amount or not date:
+            flash("All fields are required.", "error")
+            return redirect(url_for("edit_expense", expense_id=expense_id))
+
+        try:
+            amount_value = float(amount)
+        except ValueError:
+            flash("Amount must be a valid number.", "error")
+            return redirect(url_for("edit_expense", expense_id=expense_id))
+
+        expense.description = description
+        expense.amount = amount_value
+        expense.date = date
+        db.session.commit()
+        flash("Expense updated successfully.", "success")
+        return redirect(url_for("expenses_view"))
+
+    return render_template("expenses.html", expenses=expenses, edit_expense=expense)
+
+
+@app.route("/expenses/delete/<int:expense_id>", methods=["POST"])
+@login_required
+def delete_expense(expense_id):
+    global expenses
+    expense = Expense.query.filter_by(id=expense_id, user_id=session["user_id"]).first()
+    if expense:
+        db.session.delete(expense)
+        db.session.commit()
+        flash("Expense deleted successfully.", "success")
+    return redirect(url_for("expenses_view"))
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -110,4 +193,3 @@ if __name__ == "__main__":
     with app.app_context():# This line ensures that the application context is available when creating the database tables. It allows the `db.create_all()` function to access the necessary configuration and context to create the tables in the database.
         db.create_all()
     app.run(debug=True)
-    
