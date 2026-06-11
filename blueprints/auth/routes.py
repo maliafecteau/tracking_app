@@ -59,7 +59,7 @@ def register():
 @auth_bp.route("/logout")#route for logging out the user, allows only GET requests
 def logout():
     session.pop("user_id", None)
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("auth.splashpage"))#remove the user ID from the session to log the user out and redirect to the splash page
 
 @auth_bp.route("/splashpage")
 def splashpage():

@@ -23,12 +23,14 @@
                 {% endwith %}
                 {% block content %}{% endblock %}
             </main>
+            {% if session.get('user_id') %} <!-- this checks if the user is logged in by checking if there is a user_id in the session, if there is it will show the nav bar -->
             <nav> <!-- nav that can be moved to the top using styling with @media queries when screen gets larger-->
                 <a href="{{ url_for('auth.home') }}" title="Home">Home</a>
                 <a href="{{ url_for('expenses.expenses_view') }}" title="Expenses">Expenses</a>
                 <a href="{{ url_for('income.income_view') }}" title="Income">Income</a>
-                <a href="{{ url_for('auth.login') }}" title="Login">Login</a>
+                <a href="{{ url_for('auth.logout') }}" title="Logout">Logout</a>
             </nav>
+            {% endif %}
         </div>
     </body>
 </html>
