@@ -11,7 +11,8 @@ app.secret_key = "warnalia"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracking_app.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
+db.init_app(app)
 
 class Income(db.Model): #database model for Income
     income_id = db.Column(db.Integer, primary_key=True)
@@ -221,7 +222,7 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        user = User.query.filter_by(name=username).first()
+        user = User.query.filter_by(name=username).first()# Query the database for a user with the provided username. If a user is found, it checks if the password matches. If the credentials are valid, it stores the user's ID in the session and redirects to the home page. If the credentials are invalid, it returns an error message.
         if user and user.password == password:
             session["user_id"] = user.id
             return redirect(url_for("home"))#validate the user's credentials, if valid log the user in by storing their user ID in the session and redirect to the home page, if not valid show error message
@@ -232,14 +233,14 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])#route for the registration page, allows both GET and POST requests
 def register():
-    if request.method == "POST":
+    if request.method == "POST":# When a POST request is made to the register route, it retrieves the name, email, and password from the form data. It then checks if the email or username is already registered in the database and if the password meets the minimum length requirement. If any of these conditions are not met, it returns an appropriate error message. If all validations pass, it creates a new user, adds it to the database, commits the changes, stores the user's ID in the session, and redirects to the home page.
         name = request.form.get("name")
         email = request.form.get("email")
         password = request.form.get("password")
 
-        if User.query.filter_by(email=email).first():
+        if User.query.filter_by(email=email).first():# Check if the email is already registered in the database. If a user with the provided email exists, it returns an error message indicating that the email is already registered.
             return "Email already registered"
-        if User.query.filter_by(name=name).first():
+        if User.query.filter_by(name=name).first():# Check if the username is already taken in the database. If a user with the provided username exists, it returns an error message indicating that the username is already taken.
             return "Username already taken"
         if len(password) < 6:
             return "Password must be at least 6 characters long"#validate the registration form data, check if the email is already registered, if the username is already taken, and if the password meets the minimum length requirement, if any validation fails show an appropriate error message, if all validations pass create a new user account and log the user in by storing their user ID in the session and redirecting to the home page
