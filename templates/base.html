@@ -24,10 +24,10 @@
                 {% block content %}{% endblock %}
             </main>
             <nav> <!-- nav that can be moved to the top using styling with @media queries when screen gets larger-->
-                <a href="{{ url_for('auth.home') }}" title="Home">Home</a>
-                <a href="{{ url_for('expenses.expenses_view') }}" title="Expenses">Expenses</a>
-                <a href="{{ url_for('income.income_view') }}" title="Income">Income</a>
-                <a href="{{ url_for('auth.login') }}" title="Login">Login</a>
+                <a href="{{ url_for('home') }}" title="Home">Home</a>
+                <a href="{{ url_for('expenses_view') }}" title="Expenses">Expenses</a>
+                <a href="{{ url_for('wishlist') }}" title="Wishlist">Wish List</a>
+                <a href="{{ url_for('login') }}" title="Login">Login</a>
             </nav>
         </div>
     </body>

@@ -5,7 +5,7 @@
 {% block header %}Create an Account{% endblock %}
 
 {% block content %}
-    <form method="POST" action="{{ url_for('auth.register') }}">
+    <form method="POST" action="{{ url_for('register') }}">
         <div class="form-group"> <!-- these form groups are for cleaner styling -->
             <label for="name">Full Name *</label>
             <input 
@@ -43,7 +43,7 @@
     </form>
     
     <p>Already have an account?</p>
-    <a href="{{ url_for('auth.login') }}"> <!-- Link to login page -->
+    <a href="{{ url_for('login') }}"> <!-- Link to login page -->
         <button>Login here</button>
     </a>
 {% endblock %}
