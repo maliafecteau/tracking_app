@@ -1,6 +1,7 @@
 from functools import wraps
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 import traceback
 import logging
@@ -223,7 +224,7 @@ def login():
         password = request.form.get("password")
 
         user = User.query.filter_by(name=username).first()# Query the database for a user with the provided username. If a user is found, it checks if the password matches. If the credentials are valid, it stores the user's ID in the session and redirects to the home page. If the credentials are invalid, it returns an error message.
-        if user and user.password == password:
+        if user and check_password_hash(user.password, password):   
             session["user_id"] = user.id
             return redirect(url_for("home"))#validate the user's credentials, if valid log the user in by storing their user ID in the session and redirect to the home page, if not valid show error message
         return "Invalid username or password"
@@ -245,7 +246,7 @@ def register():
         if len(password) < 6:
             return "Password must be at least 6 characters long"#validate the registration form data, check if the email is already registered, if the username is already taken, and if the password meets the minimum length requirement, if any validation fails show an appropriate error message, if all validations pass create a new user account and log the user in by storing their user ID in the session and redirecting to the home page
 
-        user = User(name=name, email=email, password=password)
+        user = User(name=name, email=email, password=generate_password_hash(password)) # Create a new user instance with the provided name, email, and a hashed version of the password for security. The generate_password_hash function is used to hash the password before storing it in the database.
         db.session.add(user)
         db.session.commit()#save the new user to the database, log the user in by storing their user ID in the session and redirect to the home page
 
