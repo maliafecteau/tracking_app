@@ -10,10 +10,10 @@
     <section class="expense-form">
         {% if edit_expense %}
             <h2>Edit Expense</h2>
-            <form method="post" action="{{ url_for('edit_expense', expense_id=edit_expense.id) }}">
+            <form method="post" action="{{ url_for('expenses.edit_expense', expense_id=edit_expense.ex_id) }}">
         {% else %}
             <h2>Add New Expense</h2>
-            <form method="post" action="{{ url_for('expenses_view') }}">
+            <form method="post" action="{{ url_for('expenses.expenses_view') }}">
         {% endif %}
             <div>
                 <label for="description">Description</label>
@@ -29,7 +29,7 @@
             </div>
             <button type="submit">{% if edit_expense %}Update Expense{% else %}Add Expense{% endif %}</button>
             {% if edit_expense %}
-                <a href="{{ url_for('expenses_view') }}">Cancel</a>
+                <a href="{{ url_for('expenses.expenses_view') }}">Cancel</a>
             {% endif %}
         </form>
     </section>
@@ -52,8 +52,8 @@
                             <td>${{ expense.amount }}</td>
                             <td>{{ expense.date }}</td>
                             <td>
-                                <a href="{{ url_for('edit_expense', expense_id=expense.id) }}">Edit</a>
-                                <form method="post" action="{{ url_for('delete_expense', expense_id=expense.id) }}" style="display:inline">
+                                <a href="{{ url_for('expenses.edit_expense', expense_id=expense.ex_id) }}">Edit</a>
+                                <form method="post" action="{{ url_for('expenses.delete_expense', expense_id=expense.ex_id) }}" style="display:inline">
                                     <button type="submit">Delete</button>
                                 </form>
                             </td>
