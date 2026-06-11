@@ -6,7 +6,7 @@
 
 {% block content %}
         <p>Track your expenses and manage your budget effectively.</p>
-        <a href="{{ url_for('register') }}" class="btn">Get Started</a>
+        <a href="{{ url_for('auth.register') }}" class="btn">Get Started</a>
         <p>Already have an account?</p>
-        <a href="{{ url_for('login') }}" class="btn">Login</a>
+        <a href="{{ url_for('auth.login') }}" class="btn">Login</a>
 {% endblock %}
