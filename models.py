@@ -32,4 +32,12 @@ class User(db.Model):#db model for user
     expenses = db.relationship("Expense", backref="user", lazy=True)
     income = db.relationship('Income', backref="user", lazy=True)
     bills = db.relationship('Bill', backref="user", lazy=True)
+    savings_goals = db.relationship("SavingsGoal", backref="user", lazy=True)
 
+
+class SavingsGoal(db.Model):
+    goal_id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    target_amount = db.Column(db.Float, nullable=False)
+    deadline = db.Column(db.String(20), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

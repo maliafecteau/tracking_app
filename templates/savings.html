@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Savings{% endblock %}
+
+{% block header %}Your Savings{% endblock %}
+
+{% block content %}
+<section class="savings-summary">
+    <h2>Summary</h2>
+    <table>
+        <tr><td>Total Income</td><td>${{ total_income }}</td></tr>
+        <tr><td>Total Expenses</td><td>${{ total_expenses }}</td></tr>
+        <tr><td>Total Bills</td><td>${{ total_bills }}</td></tr>
+        <tr><td>Total Outgoings</td><td>${{ total_outgoings }}</td></tr>
+        <tr><td><strong>Net Savings</strong></td><td><strong>${{ savings }}</strong></td></tr>
+        <tr><td>Savings Rate</td><td>{{ savings_rate }}%</td></tr>
+    </table>
+</section>
+
+<section class="savings-goals">
+    <h2>Savings Goals</h2>
+    <form method="post" action="{{ url_for('savings.savings_view') }}">
+        <div>
+            <label for="title">Goal Name</label>
+            <input id="title" name="title" type="text" required>
+        </div>
+        <div>
+            <label for="target_amount">Target Amount</label>
+            <input id="target_amount" name="target_amount" type="number" step="0.01" required>
+        </div>
+        <div>
+            <label for="deadline">Deadline (optional)</label>
+            <input id="deadline" name="deadline" type="date">
+        </div>
+        <button type="submit">Add Goal</button>
+    </form>
+
+    {% if goals %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Goal</th>
+                    <th>Target</th>
+                    <th>Deadline</th>
+                    <th>Progress</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for goal in goals %}
+                <tr>
+                    <td>{{ goal.title }}</td>
+                    <td>${{ goal.target_amount }}</td>
+                    <td>{{ goal.deadline or "No deadline" }}</td>
+                    <td>
+                        {{ goal.progress }}%
+                        <progress value="{{ goal.progress }}" max="100"></progress>
+                    </td>
+                    <td>
+                        <form method="post" action="{{ url_for('savings.delete_goal', goal_id=goal.goal_id) }}" style="display:inline">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No savings goals set yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
