@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Bill{% endblock%}
+
+{% block header %}Your Bill{% endblock %}
+
+{% block content %}
+    <p>Here you can view your bill.</p>
+    
+    <section class="bill-section">
+        [% if edit_bill %]
+        <h2>Edit Bill</h2>
+        <form method="post" action="{{ url_for('bill.edit_bill', bill_id=edit_bill.bill_id) }}">
+        [% else %]
+        <h2>Add New Bill</h2>
+        <form method="post" action="{{ url_for('bill.bill_view') }}">
+        [% endif %]
+            <div>
+                <label for="description">Description</label>
+                <input id="description" name="description" type="text" required value="{{ edit_bill.description if edit_bill else '' }}">
+            </div>
+            <div>
+                <label for="amount">Amount</label>
+                <input id="amount" name="amount" type="number" step="0.01" required value="{{ edit_bill.amount if edit_bill else '' }}">
+            </div>
+            <div>
+                <label for="due_date">Due Date</label>
+                <input id="due_date" name="due_date" type="date" required value="{{ edit_bill.due_date if edit_bill else '' }}">
+            </div>
+            <button type="submit">{% if edit_bill %}Update Bill{% else %}Add Bill{% endif %}</button>
+            {% if edit_bill %}
+                <a href="{{ url_for('bill.bill_view') }}">Cancel</a>
+            {% endif %}
+        </form>
+    </section>
+
+    <section class="bill-list">
+        {% if bills %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bill in bills %}
+                        <tr>
+                            <td>{{ bill.description }}</td>
+                            <td>${{ bill.amount }}</td>
+                            <td>{{ bill.due_date }}</td>
+                            <td>
+                                <a href="{{ url_for('bill.edit_bill', bill_id=bill.bill_id) }}">Edit</a>
+                                <form method="post" action="{{ url_for('bill.delete_bill', bill_id=bill.bill_id) }}" style="display:inline">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No bills found. Start by adding a new bill above.</p>
+        {% endif %}
+{% endblock %}
