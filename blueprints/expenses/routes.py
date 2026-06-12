@@ -75,6 +75,9 @@ def edit_expense(expense_id):
 def delete_expense(expense_id):
     global expenses
     expense = Expense.query.filter_by(ex_id=expense_id, user_id=session["user_id"]).first()#fetch the expense to be deleted, ensuring it belongs to the current user
+    if not expense:
+        flash("Expense not found.", "error")
+        return redirect(url_for("expenses.expenses_view"))
     if expense:
         db.session.delete(expense)
         db.session.commit()
