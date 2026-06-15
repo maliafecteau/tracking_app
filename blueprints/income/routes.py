@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from models import db, Income
 from utils import login_required
+from datetime import datetime
 
 income_bp = Blueprint("income", __name__)
 
@@ -17,13 +18,14 @@ def income_view():
 
         try:
             amount_value = float(amount)
+            date_value = datetime.strptime(date, "%Y-%m-%d").date()
         except ValueError:
-            flash("Amount must be a valid number.", "error")
+            flash("Amount must be a valid number and date must be a valid date (YYYY-MM-DD).", "error")
             return redirect(url_for("income.income_view"))
 
         income = Income(
             amount=amount_value,
-            date=date,
+            date=date_value,
             user_id=session["user_id"],
         )
         db.session.add(income)
@@ -53,12 +55,13 @@ def edit_income(income_id):
 
         try:
             amount_value = float(amount)
+            date_value = datetime.strptime(date, "%Y-%m-%d").date()
         except ValueError:
-            flash("Amount must be a valid number.", "error")
+            flash("Amount must be a valid number and date must be a valid date (YYYY-MM-DD).", "error")
             return redirect(url_for("income.edit_income", income_id=income_id))
         
         income.amount = amount_value
-        income.date = date
+        income.date = date_value
         db.session.commit()
         flash("Income updated successfully.", "success")
         return redirect(url_for("income.income_view"))
