@@ -1,10 +1,13 @@
 from flask import Flask
+from dotenv import load_dotenv
+load_dotenv()
 from models import db
 from blueprints.auth import auth_bp
 from blueprints.expenses import expenses_bp
 from blueprints.income import income_bp
 from blueprints.bills import bills_bp
 from blueprints.savings import savings_bp
+from blueprints.bank import bank_bp
 from utils import login_required
 import os
 
@@ -22,7 +25,7 @@ def create_app():
     app.register_blueprint(income_bp)
     app.register_blueprint(bills_bp)
     app.register_blueprint(savings_bp)
-
+    app.register_blueprint(bank_bp)
     return app
 
 

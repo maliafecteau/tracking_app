@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Bank{% endblock %}
+
+{% block header %}Bank Accounts{% endblock %}
+
+{% block content %}
+<section class="bank-accounts">
+    <h2>Connected Accounts</h2>
+    {% if accounts %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Account</th>
+                    <th>Balance</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in accounts %}
+                <tr>
+                    <td>{{ account.name }}</td>
+                    <td>${{ account.balance.current }}</td>
+                    <td>{{ account.type }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No accounts found.</p>
+    {% endif %}
+</section>
+
+<section class="bank-transactions">
+    <h2>Recent Transactions</h2>
+    <form method="post" action="{{ url_for('bank.import_transactions') }}">
+        <button type="submit">Import All Transactions</button>
+    </form>
+
+    {% if transactions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in transactions %}
+                <tr>
+                    <td>{{ t.date[:10] }}</td>
+                    <td>{{ t.description }}</td>
+                    <td>${{ t.amount | abs }}</td>
+                    <td>{{ t.type }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No transactions found.</p>
+    {% endif %}
+</section>
+{% endblock %}

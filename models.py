@@ -14,15 +14,19 @@ class Bill(db.Model): #database model for Bill
 class Income(db.Model): #database model for Income
     income_id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    source = db.Column(db.String(50), default="manual")
+    external_id = db.Column(db.String(200), nullable=True)
 
 class Expense(db.Model): #db model for expense
     ex_id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(200), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.Date, nullable=False)
+    date = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    source = db.Column(db.String(50), default="manual")
+    external_id = db.Column(db.String(200), nullable=True)
 
 class User(db.Model):#db model for user
     id = db.Column(db.Integer, primary_key=True)
