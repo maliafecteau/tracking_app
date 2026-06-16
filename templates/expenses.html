@@ -1,68 +1,74 @@
-{% extends "base.html" %}
+{%extends "base.html"%}
 
-{% block title %}Expenses{% endblock %}
+{% block title %}Expenses & Bills{% endblock %}
 
-{% block header %}Your Expenses{% endblock %}
+{% block header %}Your Expenses & Bills{% endblock %}
 
 {% block content %}
-    <p>Here you can view, manage, and log your expenses.</p>
+    <p>Here you can view, manage, and log your expenses and bills.</p>
 
-    <section class="expense-form">
-        {% if edit_expense %}
-            <h2>Edit Expense</h2>
-            <form method="post" action="{{ url_for('expenses.edit_expense', expense_id=edit_expense.ex_id) }}">
-        {% else %}
-            <h2>Add New Expense</h2>
-            <form method="post" action="{{ url_for('expenses.expenses_view') }}">
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
         {% endif %}
-            <div>
-                <label for="description">Description</label>
-                <input id="description" name="description" type="text" required value="{{ edit_expense.description if edit_expense else '' }}">
-            </div>
-            <div>
-                <label for="amount">Amount</label>
-                <input id="amount" name="amount" type="number" step="0.01" required value="{{ edit_expense.amount if edit_expense else '' }}">
-            </div>
-            <div>
-                <label for="date">Date</label>
-                <input id="date" name="date" type="date" required value="{{ edit_expense.date if edit_expense else '' }}">
-            </div>
-            <button type="submit">{% if edit_expense %}Update Expense{% else %}Add Expense{% endif %}</button>
-            {% if edit_expense %}
-                <a href="{{ url_for('expenses.expenses_view') }}">Cancel</a>
-            {% endif %}
-        </form>
-    </section>
+    {% endwith %}
 
-    <section class="expense-list">
-        {% if expenses %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for expense in expenses %}
-                        <tr>
-                            <td>{{ expense.description }}</td>
-                            <td>${{ expense.amount }}</td>
-                            <td>{{ expense.date }}</td>
-                            <td>
-                                <a href="{{ url_for('expenses.edit_expense', expense_id=expense.ex_id) }}">Edit</a>
-                                <form method="post" action="{{ url_for('expenses.delete_expense', expense_id=expense.ex_id) }}" style="display:inline">
+    <button id="expense-form-btn">Add Expense</button>
+    <button id="bill-form-btn">Add Bill</button>
+
+    <div id="add-expense-form" class="{% if not edit_expense %}hidden{% endif %}">
+        {% include 'expenses_form.html' %}
+    </div>
+    
+    <div id="add-bill-form" class="{% if not edit_bill %}hidden{% endif %}">
+        {% include 'bill.html' %}
+    </div>
+
+    <div class="toggle-buttons">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="expense">Expenses</button>
+        <button data-filter="bill">Bills</button>
+    </div>
+
+
+    {% if merged %}
+        <table id="expenses-bills-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in merged %}
+                    <tr data-type="{{ item.type }}" class="{% if item.type == 'bill' %}bill-row{% endif %}">
+                        <td>{{ item.type | capitalize }}</td>
+                        <td>{{ item.description }}</td>
+                        <td>${{ item.amount }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>
+                            {% if item.type == 'expense' %}
+                                <a href="{{ url_for('expenses.edit_expense', expense_id=item.id) }}">Edit</a>
+                                <form method="post" action="{{ url_for('expenses.delete_expense', expense_id=item.id) }}" style="display:inline">
                                     <button type="submit">Delete</button>
                                 </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No expenses yet. Use the form above to add one.</p>
-        {% endif %}
-    </section>
+                            {% elif item.type == 'bill' %}
+                                <a href="{{ url_for('bills.edit_bill', bill_id=item.id) }}">Edit</a>
+                                <form method="post" action="{{ url_for('bills.delete_bill', bill_id=item.id) }}" style="display:inline">
+                                    <button type="submit">Delete</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No expenses or bills yet. Use a button above to add one.</p>
+    {% endif %}
 {% endblock %}

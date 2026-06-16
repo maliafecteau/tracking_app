@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- sets the viewport for responsive design -->
         <meta name="viewport" content="height=device-height, initial-scale=1.0"> <!-- sets the viewport height for better mobile support -->
         <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  <!-- links the stylesheet in static to this base html with flask/python-->
-        <script src="{{ url_for('static', filename='script.js') }}"> </script> <!-- javascript file in static -->
+        <script src="{{ url_for('static', filename='script.js') }}" defer></script> <!-- javascript file in static -->
 
         <title>{% block title %}{% endblock %} - Expense Tracker</title>
     </head>
@@ -28,8 +28,8 @@
                 <a href="{{ url_for('auth.home') }}" title="Home">Home</a>
                 <a href="{{ url_for('expenses.expenses_view') }}" title="Expenses">Expenses</a>
                 <a href="{{ url_for('income.income_view') }}" title="Income">Income</a>
-                <a href="{{ url_for('auth.logout') }}" title="Logout">Logout</a>
                 <a href="{{ url_for('savings.savings_view') }}" title="Savings">Savings</a>
+                <a href="{{ url_for('auth.logout') }}" title="Logout">Logout</a>
             </nav>
             {% endif %}
         </div>
