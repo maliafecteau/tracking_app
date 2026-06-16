@@ -1,0 +1,244 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   SlothMascot.css
+   Canvas: 500 × 620px (scaled via --s custom property)
+   All parts use position:absolute inside .sloth-root
+───────────────────────────────────────────────────────────────────────────── */
+
+.sloth-root {
+  position: relative;
+  width:  calc(500px * var(--s, 1));
+  height: calc(620px * var(--s, 1));
+}
+
+/* Whole sloth floats up and down */
+.sloth-float {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Shorthand: every part is absolute */
+.sp {
+  position: absolute;
+}
+
+/* Scale every SVG to fill its container box */
+.sp svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Part positions (all as % of 500×620 canvas) ────────────────────────── */
+
+/* Body — bottom of canvas, behind everything */
+.s-belly {
+  width: 72%;   /* 483px → scaled */
+  height: 65%;  /* 515px → scaled */
+  top: 37%;
+  left: 14%;
+  z-index: 2;
+  transform-origin: center top;
+}
+
+/* Legs */
+.s-leg-l {
+  width: 35%;   /* 191px */
+  height: 35%;  /* 279px */
+  bottom: -14%;
+  left: 11%;
+  z-index: 1;
+}
+
+.s-leg-claw-l {
+  width: 41%;   /* 80px */
+  height: 61%;  /* 140px */
+  bottom: -25%;
+  left: 60%;
+  z-index: 1;
+}
+
+.s-leg-r {
+  width: 41%;   /* 269px */
+  height: 43%;  /* 273px */
+  bottom: -16%;
+  right: 7%;
+  z-index: 1;
+}
+
+.s-leg-claw-r {
+  width: 40%;   /* 95px */
+  height: 60%;  /* 138px */
+  bottom: -19%;
+  right: 72%;
+  z-index: 1;
+}
+
+/* Left arm — in front of body */
+.s-arm-l {
+  width: 60%;   /* 419px → scaled */
+  height: 60%;  /* 488px → scaled */
+  top: 30%;
+  left: -6%;
+  z-index: 3;
+  transform-origin: 80% 10%;
+}
+
+.s-paw-l {
+  width: 27%;   /* 180px */
+  height: 27%;  /* 228px */
+  top: 62%;
+  left: 0;
+  z-index: 3;
+  transform-origin: 50% 0%;
+}
+
+.s-claws-l {
+  width: 60%;   /* 88px */
+  height: 70%;  /* 163px */
+  top: 75%;
+  left: 35%;
+  z-index: 3;
+  transform-origin: 50% 0%;
+}
+
+
+/* Right arm — in front of body */
+.s-arm-r {
+  width: 52%;   /* 412px → scaled */
+  height: 45%;  /* 420px → scaled */
+  top: 30%;
+  right: -6%;
+  z-index: 4;
+  transform-origin: 20% 10%;
+}
+
+.s-paw-r {
+  width: 38%;   /* 241px */
+  height: 32%;  /* 248px */
+  top: 52%;
+  right: 2%;
+  z-index: 4;
+  transform-origin: 50% 0%;
+}
+
+.s-claws-r {
+  width: 22%;   /* 120px */
+  height: 28%;  /* 186px */
+  top: 68%;
+  right: 4%;
+  z-index: 4;
+  transform-origin: 50% 0%;
+}
+
+/* Head */
+.s-head {
+  width: 68%;   /* 379px → scaled */
+  height: 42%;  /* 314px → scaled */
+  top: 3%;
+  left: 16%;
+  z-index: 5;
+  transform-origin: center bottom;
+}
+
+/* Face features — move with head via same sway class */
+.s-eyes {
+  width: 65%;   /* 257px → scaled */
+  height: 65%;   /* 59px → scaled */
+  top: 31%;
+  left: 18%;
+  z-index: 6;
+  transform-origin: center;
+}
+
+.s-nose {
+  width: 14%;   /* 81px */
+  height: 13%;  /* 96px */
+  top: 29%;
+  left: 43%;
+  z-index: 6;
+  transform-origin: center bottom;
+}
+
+.s-mouth {
+  width: 26%;   /* 148px */
+  height: 5%;   /* 33px */
+  top: 38%;
+  left: 37%;
+  z-index: 6;
+  transform-origin: center bottom;
+}
+
+/* ── Keyframes ───────────────────────────────────────────────────────────── */
+
+/* Whole-body gentle float */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+/* Head + face lazy sway */
+@keyframes sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50%       { transform: rotate(1.5deg); }
+}
+
+/* Body breathing */
+@keyframes breathe {
+  0%, 100% { transform: scaleX(1)    scaleY(1); }
+  50%       { transform: scaleX(1.02) scaleY(1.025); }
+}
+
+/* Left arm dangle */
+@keyframes swing-l {
+  0%, 100% { transform: rotate(0deg); }
+  50%       { transform: rotate(2.5deg); }
+}
+
+/* Right arm opposite phase */
+@keyframes swing-r {
+  0%, 100% { transform: rotate(0deg); }
+  50%       { transform: rotate(-2.5deg); }
+}
+
+/* Eye blink — open most of the time, snap shut briefly */
+@keyframes blink {
+  0%, 90%, 100% { transform: rotate(0deg) scaleY(1); }   /* matches sway's initial */
+  94%            { transform: rotate(0deg) scaleY(0.05); }
+}
+
+/* ── Apply animations ────────────────────────────────────────────────────── */
+
+.s-sway {
+  animation: sway 5s ease-in-out infinite;
+}
+
+.s-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.s-swing-l {
+  animation: swing-l 5s ease-in-out infinite;
+}
+
+.s-swing-r {
+  animation: swing-r 5s ease-in-out infinite 0.4s;
+}
+
+/* Blink overrides the sway transform on eyes only */
+.s-blink {
+  animation: blink 6s ease-in-out infinite 1.2s;
+}
+
+/* ── Reduced-motion: freeze all animations ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .sloth-float,
+  .s-sway,
+  .s-breathe,
+  .s-swing-l,
+  .s-swing-r,
+  .s-blink {
+    animation: none;
+  }
+}
