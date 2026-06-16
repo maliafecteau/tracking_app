@@ -60,17 +60,17 @@
 }
 
 .s-leg-r {
-  width: 41%;   /* 269px */
-  height: 43%;  /* 273px */
-  bottom: -16%;
-  right: 7%;
+  width: 40%;   /* 269px */
+  height: 46%;  /* 273px */
+  bottom: -18%;
+  right: 9%;
   z-index: 1;
 }
 
 .s-leg-claw-r {
   width: 40%;   /* 95px */
   height: 60%;  /* 138px */
-  bottom: -19%;
+  bottom: -15%;
   right: 72%;
   z-index: 1;
 }
@@ -106,10 +106,10 @@
 
 /* Right arm — in front of body */
 .s-arm-r {
-  width: 52%;   /* 412px → scaled */
-  height: 45%;  /* 420px → scaled */
+  width: 65%;   /* 412px → scaled */
+  height: 50%;  /* 420px → scaled */
   top: 30%;
-  right: -6%;
+  right: -14%;
   z-index: 4;
   transform-origin: 20% 10%;
 }
@@ -117,17 +117,17 @@
 .s-paw-r {
   width: 38%;   /* 241px */
   height: 32%;  /* 248px */
-  top: 52%;
-  right: 2%;
+  top: 35%;
+  right: 1%;
   z-index: 4;
   transform-origin: 50% 0%;
 }
 
 .s-claws-r {
-  width: 22%;   /* 120px */
-  height: 28%;  /* 186px */
-  top: 68%;
-  right: 4%;
+  width: 63%;   /* 120px */
+  height: 75%;  /* 186px */
+  top: 55%;
+  right: 45%;
   z-index: 4;
   transform-origin: 50% 0%;
 }
@@ -153,19 +153,19 @@
 }
 
 .s-nose {
-  width: 14%;   /* 81px */
-  height: 13%;  /* 96px */
-  top: 29%;
-  left: 43%;
+  width: 25%;   /* 81px */
+  height: 35%;  /* 96px */
+  top: 60%;
+  left: 38%;
   z-index: 6;
   transform-origin: center bottom;
 }
 
 .s-mouth {
-  width: 26%;   /* 148px */
-  height: 5%;   /* 33px */
-  top: 38%;
-  left: 37%;
+  width: 40%;   /* 148px */
+  height: 17%;   /* 33px */
+  bottom: 1%;
+  left: 31%;
   z-index: 6;
   transform-origin: center bottom;
 }

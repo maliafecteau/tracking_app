@@ -126,7 +126,7 @@ export default function SlothMascot({ size = 1 }) {
       style={{ "--s": size }}
       aria-label="Sloth mascot"
     >
-      <div className="sloth-float">
+      <div>
 
         {/* ── Back legs (lowest z-index) ── */}
         <div className="sp s-leg-l">
@@ -161,9 +161,9 @@ export default function SlothMascot({ size = 1 }) {
         </div>
         <div className="sp s-paw-r s-swing-r">
           <PawRight />
-        </div>
-        <div className="sp s-claws-r s-swing-r">
-          <ClawsRight />
+          <div className="sp s-claws-r s-swing-r">
+            <ClawsRight />
+          </div>
         </div>
 
         {/* ── Head + face ── */}
@@ -172,10 +172,10 @@ export default function SlothMascot({ size = 1 }) {
           <div className="sp s-eyes s-sway s-blink">
             <Eyes />
           </div>
-            <div className="sp s-nose s-sway">
+            <div className="sp s-nose">
             <Nose />
           </div>
-          <div className="sp s-mouth s-sway">
+          <div className="sp s-mouth">
             <Mouth />
           </div>
         </div>

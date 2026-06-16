@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS
 from models import db
 from blueprints.auth import auth_bp
 from blueprints.expenses import expenses_bp
@@ -15,6 +16,7 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracking_app.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+    CORS(app)
     db.init_app(app)
 
     app.register_blueprint(auth_bp)
