@@ -1,0 +1,45 @@
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
+from werkzeug.security import generate_password_hash, check_password_hash
+from models import db, User
+
+auth_api_bp = Blueprint("auth_api", __name__)
+
+@auth_api_bp.route("/api/auth/register", methods=["POST"])
+def api_register():
+    data = request.get_json()
+
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip()
+    password = data.get("password", "").strip()
+
+    if not name or not email or not password:
+        return jsonify({"error": "All fields are required"}), 400
+    if User.query.filter_by(email=email).first():
+        return jsonify({"error": "Email already associated with an account"}), 400
+    if len(password) < 6:
+        return jsonify({"error": "Password must be at least 6 characters"}), 400
+    
+    user = User(name=name, email=email, password=generate_password_hash(password))
+    db.session.add(user)
+    db.session.commit()
+
+    token = create_access_token(identity=user.id)
+    return jsonify({"token": token, "user": {"id": user.id, "name": user.name, "email": user.email}}),201
+
+@auth_api_bp.route("/api/auth/login", methods=["POST"])
+def api_login():
+    data = request.get_json()
+
+    email = data.get("email", "").strip()
+    password = data.get("password", "").strip()
+
+    if not email or not password:
+        return jsonify({"error": "all fields required"}), 400
+    
+    user = User.query.filter_by(email=email).first()
+    if not user or not check_password_hash(user.password, password):
+        return jsonify({"error": "Invalid username or password"}), 401
+    
+    token = create_access_token(identity=user.id)
+    return jsonify({"token": token, "user": {"id": user.id, "name": user.name, "email": user.email}}),200
