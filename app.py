@@ -22,6 +22,7 @@ import os
 
 def create_app():
     app = Flask(__name__)
+
     app.secret_key = os.environ.get("SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracking_app.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -46,5 +47,9 @@ def create_app():
 
     return app
 
+
 if __name__ == "__main__":
     app = create_app()
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
