@@ -23,10 +23,11 @@ import os
 def create_app():
     app = Flask(__name__)
 
-    app.secret_key = os.environ.get("SECRET_KEY")
+    # fallback secret keys so jwt auth works in dev without env vars
+    app.secret_key = os.environ.get("SECRET_KEY") or "dev-secret-key"
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracking_app.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
+    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY") or app.secret_key or "dev-jwt-secret-key"
 
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
