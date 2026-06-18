@@ -7,7 +7,7 @@ class Bill(db.Model): #database model for Bill
     bill_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    day_due = db.Column(db.Date, nullable=False)
+    day_due = db.Column(db.Integer, nullable=False)
     is_recurring = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
@@ -43,5 +43,5 @@ class SavingsGoal(db.Model):
     goal_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     target_amount = db.Column(db.Float, nullable=False)
-    deadline = db.Column(db.Date, nullable=True)
+    deadline = db.Column(db.String(20), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)

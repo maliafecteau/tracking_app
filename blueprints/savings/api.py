@@ -29,7 +29,7 @@ def get_savings_data(user_id):
 @savings_api_bp.route("/api/savings", methods=["GET"])
 @jwt_required()
 def api_get_savings():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = get_savings_data(user_id)
     goals = SavingsGoal.query.filter_by(user_id=user_id).all()
 
@@ -51,7 +51,7 @@ def api_get_savings():
 @savings_api_bp.route("/api/savings/goals", methods=["POST"])
 @jwt_required()
 def api_create_goal():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     title = data.get("title", "").strip()
@@ -76,7 +76,7 @@ def api_create_goal():
 @savings_api_bp.route("/api/savings/goals/<int:goal_id>", methods=["DELETE"])
 @jwt_required()
 def api_delete_goal(goal_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     goal = SavingsGoal.query.filter_by(goal_id=goal_id, user_id=user_id).first()
 
     if not goal:

@@ -8,6 +8,11 @@ from blueprints.bills import bills_bp
 from blueprints.savings import savings_bp
 from blueprints.bank import bank_bp
 from blueprints.auth.api import auth_api_bp
+from blueprints.expenses.api import expenses_api_bp
+from blueprints.income.api import income_api_bp
+from blueprints.bills.api import bills_api_bp
+from blueprints.savings.api import savings_api_bp
+from blueprints.bank.api import bank_api_bp
 from utils import login_required
 import os
 from dotenv import load_dotenv
@@ -34,6 +39,11 @@ def create_app():
     app.register_blueprint(savings_bp)
     app.register_blueprint(bank_bp)
     app.register_blueprint(auth_api_bp)
+    app.register_blueprint(expenses_api_bp)
+    app.register_blueprint(income_api_bp)
+    app.register_blueprint(bills_api_bp)
+    app.register_blueprint(savings_api_bp)
+    app.register_blueprint(bank_api_bp)
 
     return app
 

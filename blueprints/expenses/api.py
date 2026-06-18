@@ -7,7 +7,7 @@ expenses_api_bp = Blueprint("expenses_api", __name__)
 @expenses_api_bp.route("/api/expenses", methods=["GET"])
 @jwt_required()
 def api_get_expenes():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     expenses = Expense.query.filter_by(user_id=user_id).all()
     return jsonify([{
         "id": e.ex_id,
@@ -19,7 +19,7 @@ def api_get_expenes():
 @expenses_api_bp.route("/api/expenses", methods=["POST"])
 @jwt_required()
 def api_create_expense():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data = request.get_json()
 
     description = data.get("description", "").strip()
@@ -43,7 +43,7 @@ def api_create_expense():
 @expenses_api_bp.route("/api/expenses/<int:expense_id>", methods=["PUT"])
 @jwt_required()
 def api_update_expense(expense_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     expense = Expense.query.filter_by(ex_id=expense_id, user_id=user_id).first()
 
     if not expense:
@@ -73,7 +73,7 @@ def api_update_expense(expense_id):
 @expenses_api_bp.route("/api/expenses/<int:expense_id>", methods=["DELETE"])
 @jwt_required()
 def api_delete_expense(expense_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     expense = Expense.query.filter_by(ex_id=expense_id, user_id=user_id).first()
 
     if not expense:

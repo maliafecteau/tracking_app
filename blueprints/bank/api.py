@@ -24,7 +24,7 @@ def api_get_transactions():
 @bank_api_bp.route("/api/bank/import", methods=["POST"])
 @jwt_required()
 def api_import_transactions():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     transactions = get_transactions()
     imported = 0
     skipped = 0

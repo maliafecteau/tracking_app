@@ -14,7 +14,7 @@ def api_get_bills():
 
     result = []
     for bill in bills:
-        days_until = bill.due_day - today
+        days_until = bill.day_due - today
         if days_until < 0:
             status = "overdue"
         elif days_until <= 7:
@@ -26,7 +26,7 @@ def api_get_bills():
             "id": bill.bill_id,
             "title": bill.title,
             "amount": bill.amount,
-            "due_day": bill.due_day,
+            "day_due": bill.day_due,
             "is_recurring": bill.is_recurring,
             "status": status
         })
@@ -42,25 +42,25 @@ def api_create_bill():
 
     title = data.get("title", "").strip()
     amount = data.get("amount")
-    due_day = data.get("due_day")
+    day_due = data.get("day_due")
     is_recurring = data.get("is_recurring", True)
 
-    if not title or amount is None or due_day is None:
+    if not title or amount is None or day_due is None:
         return jsonify({"error": "All fields are required"}), 400
 
     try:
         amount_value = float(amount)
-        due_day_value = int(due_day)
-        if not 1 <= due_day_value <= 31:
+        day_due_value = int(day_due)
+        if not 1 <= day_due_value <= 31:
             raise ValueError
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid amount or due day"}), 400
 
-    bill = Bill(title=title, amount=amount_value, due_day=due_day_value, is_recurring=is_recurring, user_id=user_id)
+    bill = Bill(title=title, amount=amount_value, day_due=day_due_value, is_recurring=is_recurring, user_id=user_id)
     db.session.add(bill)
     db.session.commit()
 
-    return jsonify({"id": bill.bill_id, "title": bill.title, "amount": bill.amount, "due_day": bill.due_day}), 201
+    return jsonify({"id": bill.bill_id, "title": bill.title, "amount": bill.amount, "day_due": bill.day_due}), 201
 
 
 @bills_api_bp.route("/api/bills/<int:bill_id>", methods=["PUT"])
@@ -75,27 +75,27 @@ def api_update_bill(bill_id):
     data = request.get_json()
     title = data.get("title", "").strip()
     amount = data.get("amount")
-    due_day = data.get("due_day")
+    day_due = data.get("day_due")
     is_recurring = data.get("is_recurring", True)
 
-    if not title or amount is None or due_day is None:
+    if not title or amount is None or day_due is None:
         return jsonify({"error": "All fields are required"}), 400
 
     try:
         amount_value = float(amount)
-        due_day_value = int(due_day)
-        if not 1 <= due_day_value <= 31:
+        day_due_value = int(day_due)
+        if not 1 <= day_due_value <= 31:
             raise ValueError
     except (ValueError, TypeError):
         return jsonify({"error": "Invalid amount or due day"}), 400
 
     bill.title = title
     bill.amount = amount_value
-    bill.due_day = due_day_value
+    bill.day_due = day_due_value
     bill.is_recurring = is_recurring
     db.session.commit()
 
-    return jsonify({"id": bill.bill_id, "title": bill.title, "amount": bill.amount, "due_day": bill.due_day})
+    return jsonify({"id": bill.bill_id, "title": bill.title, "amount": bill.amount, "day_due": bill.day_due})
 
 
 @bills_api_bp.route("/api/bills/<int:bill_id>", methods=["DELETE"])

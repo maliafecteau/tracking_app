@@ -7,7 +7,7 @@ income_api_bp = Blueprint("income_api", __name__)
 @income_api_bp.route("/api/income", methods=["GET"])
 @jwt_required()
 def api_get_income():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     incomes = Income.query.filter_by(user_id=user_id).all()
     return jsonify([{
         "id": i.income_id,
@@ -44,7 +44,7 @@ def api_create_income():
 @income_api_bp.route("/api/income/<int:income_id>", methods=["PUT"])
 @jwt_required()
 def api_update_income(income_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     income = Income.query.filter_by(income_id=income_id, user_id=user_id).first()
 
     if not income:
@@ -72,7 +72,7 @@ def api_update_income(income_id):
 @income_api_bp.route("/api/income/<int:income_id>", methods=["DELETE"])
 @jwt_required()
 def api_delete_income(income_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     income = Income.query.filter_by(income_id=income_id, user_id=user_id).first()
 
     if not income:

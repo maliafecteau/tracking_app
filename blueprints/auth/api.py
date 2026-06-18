@@ -24,22 +24,22 @@ def api_register():
     db.session.add(user)
     db.session.commit()
 
-    token = create_access_token(identity=user.id)
+    token = create_access_token(identity=str(user.id))
     return jsonify({"token": token, "user": {"id": user.id, "name": user.name, "email": user.email}}),201
 
 @auth_api_bp.route("/api/auth/login", methods=["POST"])
 def api_login():
     data = request.get_json()
 
-    email = data.get("email", "").strip()
+    username = data.get("username", "").strip()
     password = data.get("password", "").strip()
 
-    if not email or not password:
-        return jsonify({"error": "all fields required"}), 400
-    
-    user = User.query.filter_by(email=email).first()
+    if not username or not password:
+        return jsonify({"error": "All fields are required"}), 400
+
+    user = User.query.filter_by(name=username).first()
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid username or password"}), 401
-    
-    token = create_access_token(identity=user.id)
-    return jsonify({"token": token, "user": {"id": user.id, "name": user.name, "email": user.email}}),200
+
+    token = create_access_token(identity=str(user.id))
+    return jsonify({"token": token, "user": {"id": user.id, "name": user.name, "email": user.email}}), 200
