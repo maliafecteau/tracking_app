@@ -1,5 +1,9 @@
 from flask import Flask
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
+load_dotenv()
+
 from models import db
 from blueprints.auth import auth_bp
 from blueprints.expenses import expenses_bp
@@ -15,20 +19,16 @@ from blueprints.savings.api import savings_api_bp
 from blueprints.bank.api import bank_api_bp
 from utils import login_required
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    
-   
+
     app.secret_key = os.environ.get("SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///tracking_app.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY", "jwt_secret_key")
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False # add expiry later dude
+    app.config["JWT_SECRET_KEY"] = os.environ.get("JWT_SECRET_KEY")
 
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
     JWTManager(app)
 
@@ -51,5 +51,5 @@ def create_app():
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
-        db.create_all()#create database tables if they don't exist
+        db.create_all()
     app.run(debug=True)

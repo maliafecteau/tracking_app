@@ -131,3 +131,29 @@ table th, table td {
 .hidden {
     display: none;
 }
+
+.toggle-buttons {
+    display: flex;
+    gap: 10px;
+    border-radius: 10px;
+    border: transparent;
+    background-color: rgb(114, 136, 78);
+    backdrop-filter: blur(5.5px);
+}
+
+.toggle-btn {
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    border: transparent;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+.active {
+    background-color:white;
+    color: black;
+    font-weight: bold;
+    border: 3px solid rgba(255, 255, 255, 0.473);
+    border-radius: 10px;
+}

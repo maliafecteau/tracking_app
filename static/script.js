@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => { // wait for the DOM (Docum
             const filter = btn.dataset.filter; // get the filter type from the button's "data-filter" attribute
 
             // update "active" button styling
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            filterBtns.forEach(b => b.classList.remove('active')); // remove "active" class from all buttons
+            btn.classList.add('active'); // add "active" class to the clicked button
 
             //filter rows
             rows.forEach(row => {
