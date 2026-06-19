@@ -8,14 +8,21 @@ bank_api_bp = Blueprint("bank_api", __name__)
 @bank_api_bp.route("/api/bank/accounts", methods=["GET"])
 @jwt_required()
 def api_get_accounts():
-    accounts = get_accounts()
+    try:
+        accounts = get_accounts()
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
     return jsonify(accounts)
 
 
 @bank_api_bp.route("/api/bank/transactions", methods=["GET"])
 @jwt_required()
 def api_get_transactions():
-    transactions = get_transactions()
+    try:
+        transactions = get_transactions()
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
+
     for t in transactions:
         t["type"] = categorise_transaction(t)
     return jsonify(transactions)
@@ -25,7 +32,10 @@ def api_get_transactions():
 @jwt_required()
 def api_import_transactions():
     user_id = int(get_jwt_identity())
-    transactions = get_transactions()
+    try:
+        transactions = get_transactions()
+    except Exception as exc:
+        return jsonify({"error": str(exc)}), 500
     imported = 0
     skipped = 0
 
