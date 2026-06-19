@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy import or_
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User
@@ -37,7 +38,7 @@ def api_login():
     if not username or not password:
         return jsonify({"error": "All fields are required"}), 400
 
-    user = User.query.filter_by(name=username).first()
+    user = User.query.filter(or_(User.name == username, User.email == username)).first()
     if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid username or password"}), 401
 

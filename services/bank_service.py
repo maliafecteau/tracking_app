@@ -1,5 +1,4 @@
 import os
-from wsgiref import headers 
 import requests
 
 AKAHU_BASE_URL = "https://api.akahu.io/v1"
@@ -13,16 +12,16 @@ def get_headers():# function to get the headers for our requests to the Akahu AP
     }
 
 def get_accounts(): # function to get the user's accounts from the Akahu API, we will use this to display the accounts on the dashboard and also to calculate the total income for the savings page
-        response = requests.get(f"{AKAHU_BASE_URL}/accounts", headers=get_headers())
-        if response.status_code == 200:
-            return response.json().get("items", [])
-        return []
+    response = requests.get(f"{AKAHU_BASE_URL}/accounts", headers=get_headers())
+    if response.status_code == 200:
+        return response.json().get("items", [])
+    raise RuntimeError(f"akahu accounts error {response.status_code}: {response.text}")
 
 def get_transactions():# function to get the user's transactions from the Akahu API, we will use this to display the transactions on the dashboard and also to calculate the total income and expenses for the savings page, we will also use the categorise_transaction function to categorise each transaction as either income or expense based on the amount, if the amount is greater than 0 it is income, otherwise it is an expense
-     response = requests.get(f"{AKAHU_BASE_URL}/transactions", headers=get_headers())
-     if response.status_code == 200:
-         return response.json().get("items", [])    
-     return []
+    response = requests.get(f"{AKAHU_BASE_URL}/transactions", headers=get_headers())
+    if response.status_code == 200:
+        return response.json().get("items", [])
+    raise RuntimeError(f"akahu transactions error {response.status_code}: {response.text}")
 
 def categorise_transaction(transactions): # function to categorise a transaction as either income or expense based on the amount, if the amount is greater than 0 it is income, otherwise it is an expense, we will use this function to help us calculate the total income and expenses for the savings page
     amount = transactions.get("amount", 0)
