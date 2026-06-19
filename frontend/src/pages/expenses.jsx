@@ -69,8 +69,8 @@ export default function Expenses() {
             </tr>
           </thead>
           <tbody>
-            {sampleMerged.map((item) => (
-              <tr key={item.id} data-type={item.type} className={item.type === 'bill' ? 'bill-row' : undefined}>
+            {sampleMerged.map((item) => ( 
+              <tr key={item.id} data-type={item.type} className={item.type === 'bill' ? 'bill-row' : undefined}> 
                 <td>{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
                 <td>{item.description}</td>
                 <td>${item.amount}</td>
