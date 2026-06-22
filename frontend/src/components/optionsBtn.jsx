@@ -1,10 +1,12 @@
 import { apiFetch } from '../utils/api'
 import React, {useState, useEffect, useRef} from 'react'
+import './OptionsBtn.css'
 
-export default function optionsBtn() {
+const OptionsBtn = ({ idKey, itemType })  => {
     const [isOpen, setIsOpen] = useState(false)
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
+    const menuRef = useRef(null)
 
     // close menu when clicking outside
     useEffect(() => {
@@ -48,16 +50,16 @@ export default function optionsBtn() {
             
     return (
         <div className="options-container" ref={menuRef}>
-            <button onClick={() => setIsOpen(!isOpen)} className="options-btn">
-                &#8942; {/* Vertical ellipses unicode*/}
-            </button>
+            <button onClick={() => setIsOpen(!isOpen)} className="options-btn">&hellip;</button>
         
         {isOpen && (
             <div className="dropdown-content">
-                <button onClick={() => handleAction('edit')}>Edit</button>
-                <button onClick={() => handleAction('delete')}>Delete</button>
+                <button onClick={() => handleAction('edit', itemType, idKey)}>Edit</button>
+                <button onClick={() => handleAction('delete', itemType, idKey)}>Delete</button>
             </div>
         )}
         </div>
     )
 }
+
+export default OptionsBtn

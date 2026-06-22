@@ -1,0 +1,28 @@
+.options-btn {
+    color: white;
+    font-size: 30px;
+    background-color: transparent;
+    padding: 0;
+    margin-top: -30%;
+}
+
+.options-container {
+    position: relative;
+}
+
+.dropdown-content {
+    position: absolute;
+    bottom: 25px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5.5px);
+    border-radius: 8px 8px 0px 8px;
+    z-index: 1;
+    padding: 5px;
+}
+
+.dropdown-content button {
+    background-color: transparent;
+    font-size: 16px;
+}

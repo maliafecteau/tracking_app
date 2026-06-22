@@ -3,6 +3,8 @@ import Base from './base'
 import ExpensesForm from './expenses_form'
 import Bill from './bill'
 import { apiFetch } from '../utils/api'
+import ExpenseChip from '../components/ExpenseChip/ExpenseChip'
+import ToggleBtns from '../components/ToggleBtns/ToggleBtns'
 
 const sampleMerged = [
   { type: 'expense', id: 1, description: 'Groceries', amount: 54.75, date: '2026-06-10' },
@@ -11,10 +13,22 @@ const sampleMerged = [
 
 // expenses page that can delete items through the api
 export default function Expenses() {
-  const [showExpenseForm, setShowExpenseForm] = useState(true)
+  const [showExpenseForm, setShowExpenseForm] = useState(false)
   const [showBillForm, setShowBillForm] = useState(false)
+  const [filter, setFilter] = useState('all')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
+
+  const filterOptions = [
+    { label: 'All', value: 'all' },
+    { label: 'Expenses', value: 'expense' },
+    { label: 'Bills', value: 'bill' },
+  ]
+
+  const filteredItems = sampleMerged.filter((item) => {
+    if (filter === 'all') return true
+    return item.type === filter
+  })
 
   async function handleDelete(type, itemId) {
     setError('')
@@ -51,46 +65,23 @@ export default function Expenses() {
         <Bill />
       </div>
 
-      <div className="toggle-buttons">
-        <button data-filter="all" className="toggle-btn active" type="button">All</button>
-        <button data-filter="expense" className="toggle-btn" type="button">Expenses</button>
-        <button data-filter="bill" className="toggle-btn" type="button">Bills</button>
-      </div>
+      <ToggleBtns options={filterOptions} value={filter} onChange={setFilter} />
 
-      {sampleMerged.length ? (
-        <table id="expenses-bills-table">
-          <thead>
-            <tr>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sampleMerged.map((item) => ( 
-              <tr key={item.id} data-type={item.type} className={item.type === 'bill' ? 'bill-row' : undefined}> 
-                <td>{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                <td>{item.description}</td>
-                <td>${item.amount}</td>
-                <td>{item.date}</td>
-                <td>
-                  <span>{item.type === 'expense' ? 'Expense' : 'Bill'}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(item.type, item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>No expenses or bills yet. Use a button above to add one.</p>
-      )}
+      <div className='expenses-container'>
+        {filteredItems.length ? (
+          filteredItems.map((item) => (
+              <ExpenseChip 
+                itemID={item.id}
+                type={item.type}
+                description={item.description}
+                date={item.date}
+                amount={item.amount}
+                key={`${item.type}-${item.id}`}/>
+          ))
+        ) : (
+          <p>No expenses or bills yet. Use a button above to add one.</p>
+        )}
+      </div>
       {message && <p className="form-success">{message}</p>}
       {error && <p className="form-error">{error}</p>}
     </Base>
