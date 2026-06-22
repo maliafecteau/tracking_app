@@ -201,6 +201,10 @@
   color: rgba(69,47,31,0.8);
 }
 
+.username {
+  text-transform: capitalize;
+}
+
 .ticks {
   position: relative;
   width: 100%;
