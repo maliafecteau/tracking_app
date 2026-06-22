@@ -8,8 +8,13 @@ auth_api_bp = Blueprint("auth_api", __name__)
 
 @auth_api_bp.route("/api/auth/register", methods=["POST"])
 def api_register():
-    data = request.get_json()
-
+    print("Raw data:", request.data)
+    print("Content type:", request.content_type)
+    data = request.get_json(silent=True)
+    print("Parsed JSON:", data)
+    if not data or not isinstance(data, dict):
+        return jsonify({"error": "Invalid JSON body"}), 400
+   
     name = data.get("name", "").strip()
     email = data.get("email", "").strip()
     password = data.get("password", "").strip()
@@ -30,8 +35,11 @@ def api_register():
 
 @auth_api_bp.route("/api/auth/login", methods=["POST"])
 def api_login():
-    data = request.get_json()
+    data = request.get_json(silent=True)
 
+    if not data or not isinstance(data, dict):
+        return jsonify({"error": "Invalid JSON body"}), 400
+    
     username = data.get("username", "").strip()
     password = data.get("password", "").strip()
 

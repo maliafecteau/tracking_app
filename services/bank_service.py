@@ -1,5 +1,6 @@
 import os
 import requests
+import re
 
 AKAHU_BASE_URL = "https://api.akahu.io/v1"
 APP_TOKEN = os.environ.get("AKAHU_APP_TOKEN")# we will use this to authenticate our requests to the Akahu API, we will store it in an environment variable for security reasons, you can set it in a .env file in the root of your project with the name AKAHU_APP_TOKEN and the value of your app token, then we can load it using the python-dotenv library, make sure to install it with pip install python-dotenv and import load_dotenv from dotenv at the top of this file, then call load_dotenv() before trying to access the environment variable, this will allow us to keep our app token secret and not hardcode it in our code
@@ -29,3 +30,45 @@ def categorise_transaction(transactions): # function to categorise a transaction
          return "income"
     return "expense"
 
+
+def clean_description(transaction): #cleaning up akahu transactions so they appear cleaner in the database
+    #akahu also provides merchant infromation which can be cleaner than jsut the retailer
+    #we prefere the merchant name if available
+    merchant = transaction.get("merchant", {})
+    if merchant and merchant.get("name"):
+        return merchant["name"]
+
+    #fall back on to cleaning the description if unavailable
+    raw = transaction.get("description", "Unknown transaction")
+
+    # strip card numbers 
+    raw = re.sub(r"Card [Nn]umber:?\s*[\d\s\*]+", "", raw, flags=re.IGNORECASE)
+
+    # strip currency converesion notes
+    raw = re.sub(r"converted at.*", "", raw, flags=re.IGNORECASE)
+    raw = re.sub(r"This includes a currency conversion.*", "", raw, flags=re.IGNORECASE)
+
+    #collapse extra white space
+    raw = re.sub(r"\s+"," ",raw).strip()
+
+    #truncate if still too long
+    if len(raw) > 60:
+        raw = raw[:57] + "..."
+        
+    return raw or "Unknown transaction"
+
+def get_akahu_category(transaction):
+    category = transaction.get("category", {})
+    if not category:
+        return "Other"
+    
+    # prefer the personal_finance group name as it's cleaner
+    groups = category.get("groups", {})
+    personal_finance = groups.get("personal_finance", {})
+    group_name = personal_finance.get("name")
+    
+    if group_name:
+        return group_name
+    
+    # fall back to the raw category name if no group
+    return category.get("name", "Other")

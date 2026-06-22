@@ -161,6 +161,50 @@
   }
 }
 
+/* styles for homepage box */
+
+.home-dashboard-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 2rem;
+}
+
+.dashboard-box {
+  background: #98B07E;
+  color: #FFFFFF;
+  border-radius: 1rem;
+  padding: 1.5rem 1.75rem;
+  min-width: 240px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  text-align: left;
+  opacity: 1;
+}
+
+.dashboard-box p {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #FFFFFF;
+  -webkit-text-stroke-width: 0.055rem;
+  -webkit-text-stroke-color: rgba(69, 47, 31, 0.8);
+}
+
+.dashboard-box p:last-child {
+  margin-bottom: 0;
+}
+
+.home-regular {
+  color: rgba(69,47,31,0.8);
+}
+
+.username {
+  text-transform: capitalize;
+}
+
 .ticks {
   position: relative;
   width: 100%;

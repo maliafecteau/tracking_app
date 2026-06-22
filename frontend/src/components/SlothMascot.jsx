@@ -119,7 +119,7 @@ const LegClawR = () => (
 
 /* ── Assembled animated sloth ─────────────────────────────────────────────── */
 
-export default function SlothMascot({ size = 1 }) {
+export default function SlothMascot({ size = 0.4 }) {
   return (
     <div
       className="sloth-root"

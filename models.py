@@ -27,6 +27,7 @@ class Expense(db.Model): #db model for expense
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     source = db.Column(db.String(50), default="manual")
     external_id = db.Column(db.String(200), nullable=True)
+    category = db.Column(db.String(50), default="Other")
 
 class User(db.Model):#db model for user
     id = db.Column(db.Integer, primary_key=True)
