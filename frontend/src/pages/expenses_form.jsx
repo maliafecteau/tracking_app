@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { apiFetch } from '../utils/api'
 
-// form for adding expenses through the api
-export default function ExpensesForm() {
+export default function ExpensesForm({ onSuccess }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [date, setDate] = useState('')
@@ -21,10 +20,10 @@ export default function ExpensesForm() {
 
     const data = await response.json()
     if (response.ok) {
-      setMessage('Expense added successfully.')
       setDescription('')
       setAmount('')
       setDate('')
+      if (onSuccess) onSuccess()
       return
     }
 
@@ -71,7 +70,6 @@ export default function ExpensesForm() {
         </div>
         <button type="submit">Add Expense</button>
       </form>
-      {message && <p className="form-success">{message}</p>}
       {error && <p className="form-error">{error}</p>}
     </section>
   )

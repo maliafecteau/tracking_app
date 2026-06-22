@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Base from './base'
 import ExpensesForm from './expenses_form'
 import Bill from './bill'
@@ -6,13 +6,9 @@ import { apiFetch } from '../utils/api'
 import ExpenseChip from '../components/ExpenseChip/ExpenseChip'
 import ToggleBtns from '../components/ToggleBtns/ToggleBtns'
 
-const sampleMerged = [
-  { type: 'expense', id: 1, description: 'Groceries', amount: 54.75, date: '2026-06-10' },
-  { type: 'bill', id: 2, description: 'Electricity', amount: 120.0, date: '2026-06-12' },
-]
-
-// expenses page that can delete items through the api
 export default function Expenses() {
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
   const [showExpenseForm, setShowExpenseForm] = useState(false)
   const [showBillForm, setShowBillForm] = useState(false)
   const [filter, setFilter] = useState('all')
@@ -25,7 +21,53 @@ export default function Expenses() {
     { label: 'Bills', value: 'bill' },
   ]
 
-  const filteredItems = sampleMerged.filter((item) => {
+  async function loadData() {
+    setLoading(true)
+    setError('')
+
+    const [expensesRes, billsRes] = await Promise.all([
+      apiFetch('/api/expenses'),
+      apiFetch('/api/bills'),
+    ])
+
+    if (!expensesRes.ok || !billsRes.ok) {
+      setError('Unable to load data. Please log in.')
+      setLoading(false)
+      return
+    }
+
+    const expenses = await expensesRes.json()
+    const bills = await billsRes.json()
+
+    const merged = [
+      ...expenses.map((e) => ({
+        type: 'expense',
+        id: e.id,
+        description: e.description,
+        amount: e.amount,
+        date: e.date,
+        category: e.category,
+      })),
+      ...bills.map((b) => ({
+        type: 'bill',
+        id: b.id,
+        description: b.title,
+        amount: b.amount,
+        date: `Due day ${b.day_due}`,
+        category: 'Bill',
+      })),
+    ]
+
+    merged.sort((a, b) => (a.date < b.date ? 1 : -1))
+    setItems(merged)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const filteredItems = items.filter((item) => {
     if (filter === 'all') return true
     return item.type === filter
   })
@@ -40,6 +82,7 @@ export default function Expenses() {
 
     if (response.ok) {
       setMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully.`)
+      loadData()
       return
     }
 
@@ -58,28 +101,32 @@ export default function Expenses() {
       </button>
 
       <div id="add-expense-form" className={showExpenseForm ? undefined : 'hidden'}>
-        <ExpensesForm />
+        <ExpensesForm onSuccess={() => { setShowExpenseForm(false); loadData(); }} />
       </div>
 
       <div id="add-bill-form" className={showBillForm ? undefined : 'hidden'}>
-        <Bill />
+        <Bill onSuccess={() => { setShowBillForm(false); loadData(); }} />
       </div>
 
       <ToggleBtns options={filterOptions} value={filter} onChange={setFilter} />
 
       <div className='expenses-container'>
-        {filteredItems.length ? (
+        {loading && <p>Loading...</p>}
+        {!loading && filteredItems.length ? (
           filteredItems.map((item) => (
-              <ExpenseChip 
-                itemID={item.id}
-                type={item.type}
-                description={item.description}
-                date={item.date}
-                amount={item.amount}
-                key={`${item.type}-${item.id}`}/>
+            <ExpenseChip
+              itemID={item.id}
+              type={item.type}
+              description={item.description}
+              date={item.date}
+              amount={item.amount}
+              category={item.category}
+              onDelete={() => handleDelete(item.type, item.id)}
+              key={`${item.type}-${item.id}`}
+            />
           ))
         ) : (
-          <p>No expenses or bills yet. Use a button above to add one.</p>
+          !loading && <p>No expenses or bills yet. Use a button above to add one.</p>
         )}
       </div>
       {message && <p className="form-success">{message}</p>}
