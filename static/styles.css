@@ -3,14 +3,14 @@
 body { 
     background-color: rgb(242, 234, 222); 
     font-family: 'Arial', sans-serif;
-    color: rgb(0, 0, 0);
+    color: #452F1F;
     height: 100vh;
     width: 100vw;
 }
 
 p {
     font-size: 1rem;
-    color: rgb(0, 0, 0);
+    color: #452F1F;
     text-align: center;
     padding: 0.5rem;
 }

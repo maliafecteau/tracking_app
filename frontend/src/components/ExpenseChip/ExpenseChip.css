@@ -1,0 +1,31 @@
+.record-chip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px 21px 20px;
+    border-radius: 25px;
+    margin-top: -6px;
+    color: white;
+    height: 10%;
+    width: 100%;
+    background-color: rgb(150, 168, 109);
+    box-shadow: inset 0 -6px #707E52;
+    filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2))
+}
+
+.record-chip.bill {
+    background-color: #8C9DAD;
+    box-shadow: inset 0 -6px #697682;
+
+}
+
+.chip-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+p {
+    color: white;
+
+}

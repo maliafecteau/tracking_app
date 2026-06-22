@@ -1,3 +1,4 @@
+/*
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -52,6 +53,7 @@
 
 body {
   margin: 0;
+  color: #452F1F;
 }
 
 #root {
@@ -91,6 +93,15 @@ h2 {
     font-size: 20px;
   }
 }
+
+h3 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+  font-size: 18px;
+  line-height: 118%;
+  letter-spacing: -0.18px;
+}
 p {
   margin: 0;
 }
@@ -109,22 +120,32 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
-
+*/
 * { margin: 0; padding: 0; box-sizing: border-box; }
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
 
 body {
   background-color: rgb(242, 234, 222);
   font-family: 'Arial', sans-serif;
-  color: rgb(0, 0, 0);
+  color: #452F1F;
   min-height: 100vh;
   width: 100vw;
 }
 
 p {
   font-size: 1rem;
-  color: rgb(0, 0, 0);
   text-align: center;
-  padding: 0.5rem;
 }
 
 .container {
@@ -148,20 +169,30 @@ main {
   gap: 1rem;
   width: 100%;
   height: 100%;
+  background-color: #F0DCBB;
 }
 
 h1 {
   font-size: 2rem;
-  color: rgb(0, 0, 0);
   padding: 1rem;
   text-align: center;
 }
 
 h2 {
   font-size: 1.5rem;
-  color: rgb(0, 0, 0);
   padding: 0.5rem;
   text-align: center;
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: semi-bold;
+}
+
+h4 {
+    font-size: 25px;
+    font-weight: bold;
+    color: white;
 }
 
 nav {
@@ -180,7 +211,6 @@ nav {
 
 nav a {
   text-decoration: none;
-  color: rgb(0, 0, 0);
   font-size: 1rem;
   font-weight: bold;
   background-color: rgb(210, 188, 151);
@@ -193,7 +223,6 @@ button,
   display: inline-block;
   padding: 5px 10px;
   background-color: rgb(210, 188, 151);
-  color: rgb(0, 0, 0);
   text-decoration: none;
   border-radius: 5px;
   font-weight: bold;
@@ -271,4 +300,13 @@ table th, table td {
   font-weight: bold;
   border: 3px solid rgba(255, 255, 255, 0.473);
   border-radius: 10px;
+}
+
+.expenses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  padding: 5%;
 }
