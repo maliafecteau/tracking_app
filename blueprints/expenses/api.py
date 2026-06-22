@@ -14,6 +14,7 @@ def api_get_expenes():
         "description": e.description,
         "amount": e.amount,
         "source": e.source,
+        "category": e.category
     } for e in expenses])
 
 @expenses_api_bp.route("/api/expenses", methods=["POST"])

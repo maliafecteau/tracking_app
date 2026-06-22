@@ -40,6 +40,9 @@ function App() {
         <Route path="/wishlist" element={
           <ProtectedRoute><Wishlist /></ProtectedRoute>
           } />
+         <Route path="/bills" element={
+           <ProtectedRoute><Bills /></ProtectedRoute>
+            } /> 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
