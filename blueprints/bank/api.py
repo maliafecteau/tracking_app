@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.bank_service import get_accounts, get_transactions, categorise_transaction
+from services.bank_service import get_accounts, get_transactions, categorise_transaction, clean_description, get_akahu_category
+from models import db, Income, Expense
 from models import db, Income, Expense
 
 bank_api_bp = Blueprint("bank_api", __name__)
@@ -25,6 +26,8 @@ def api_get_transactions():
 
     for t in transactions:
         t["type"] = categorise_transaction(t)
+        t["clean_description"] = clean_description(t)
+        t["category"] = get_akahu_category(t)
     return jsonify(transactions)
 
 
@@ -44,6 +47,7 @@ def api_import_transactions():
             amount = t.get("amount", 0)
             date = t.get("date", "")[:10]
             external_id = t.get("_id")
+            description = clean_description(t)
 
             if amount > 0:
                 exists = Income.query.filter_by(external_id=external_id).first()
@@ -56,13 +60,15 @@ def api_import_transactions():
             else:
                 exists = Expense.query.filter_by(external_id=external_id).first()
                 if not exists:
+                    category = get_akahu_category(t)
                     expense = Expense(
-                        description=t.get("description", "Bank transaction"),
+                        description=description,
                         amount=abs(amount),
                         date=date,
                         user_id=user_id,
                         source="bank_api",
-                        external_id=external_id
+                        external_id=external_id,
+                        category=category
                     )
                     db.session.add(expense)
                     imported += 1
