@@ -16,9 +16,6 @@ import './App.css'
 function App() {
   return (
     <BrowserRouter>
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
-        <SlothMascot size={1} />
-      </div>
       <Routes>
         <Route path="/" element={<Splashpage />} />
         <Route path="/login" element={<Login />} />
