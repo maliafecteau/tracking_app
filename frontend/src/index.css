@@ -327,6 +327,75 @@ table th, table td {
   box-shadow: 0 14px 28px rgba(69, 47, 31, 0.12);
 }
 
+.splash-page {
+  position: relative;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.splash-paws {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: min(92px, 18%);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.splash-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.splash-mascot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splash-copy-block {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-left: 0.35rem;
+}
+
+.splash-copy-lines {
+  width: 100%;
+  text-align: left;
+  font-size: 1.1rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: rgba(69, 47, 31, 0.95);
+}
+
+.splash-action {
+  width: auto;
+  min-width: 9.5rem;
+  align-self: center;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.splash-primary {
+  padding: 0.55rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.splash-primary {
+  background-color: rgb(114, 136, 78);
+  color: white;
+}
+
+.splash-primary:hover {
+  background-color: rgb(98, 118, 66);
+}
+
 .login-kicker {
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -437,6 +506,40 @@ table th, table td {
     width: 94%;
     min-height: auto;
     padding: 1rem;
+  }
+
+  .splash-paws {
+    top: 0.65rem;
+    right: 0.65rem;
+    width: 72px;
+  }
+
+  .splash-hero {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .splash-mascot {
+    width: 100%;
+  }
+
+  .splash-mascot .sloth-root {
+    width: min(340px, 100%);
+    height: auto;
+  }
+
+  .splash-copy-block {
+    padding-left: 0;
+  }
+
+  .splash-copy-lines {
+    font-size: 1rem;
+  }
+
+  .splash-action {
+    min-width: 0;
+    width: 100%;
   }
 
   .login-form {
