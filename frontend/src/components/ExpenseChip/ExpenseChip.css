@@ -1,11 +1,13 @@
 .record-chip {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
+    flex-wrap: wrap;
     padding: 15px 20px 21px 20px;
     border-radius: 25px;
     margin-top: -6px;
     color: white;
+    gap: 10px;
     height: 10%;
     width: 100%;
     background-color: rgb(150, 168, 109);
@@ -22,10 +24,17 @@
 .chip-section {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 5px; 
+    align-items: flex-start;
 }
 
-p {
+.record-chip p {
     color: white;
+}
 
+.category-tag {
+    font-size: 14px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 20px;
+    padding: 8px 15px;
 }

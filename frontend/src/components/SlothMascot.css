@@ -6,7 +6,7 @@
 
 .sloth-root {
   position: relative;
-  width:  calc(500px * var(--s, 1));
+  width:  calc(500px * var(--s, 1)); 
   height: calc(620px * var(--s, 1));
 }
 
