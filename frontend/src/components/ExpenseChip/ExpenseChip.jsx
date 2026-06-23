@@ -1,6 +1,6 @@
 import './ExpenseChip.css'
 import OptionsBtn from '../OptionsBtn'
-import react from 'React'
+import React from 'react'
 
 export default function ExpenseChip({ itemId, type, description, date, amount }) {
     return (

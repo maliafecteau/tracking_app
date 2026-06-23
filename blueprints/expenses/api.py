@@ -84,7 +84,7 @@ def api_delete_expense(expense_id):
     db.session.commit()
     return jsonify({"message": "Expense deleted"}), 200
 
-@expenses_api_bp("/api/expenses/summary", methods=["GET"]) # summary endpoint to create charts for later
+@expenses_api_bp.route("/api/expenses/summary", methods=["GET"]) # summary endpoint to create charts for later
 @jwt_required()
 def api_expenses_summary():
     user_id = int(get_jwt_identity())
