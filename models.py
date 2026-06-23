@@ -46,3 +46,9 @@ class SavingsGoal(db.Model):
     target_amount = db.Column(db.Float, nullable=False)
     deadline = db.Column(db.String(20), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+class Category(db.Model):
+    category_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    color = db.Column(db.String(20), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable =True)

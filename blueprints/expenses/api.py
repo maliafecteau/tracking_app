@@ -8,15 +8,52 @@ expenses_api_bp = Blueprint("expenses_api", __name__)
 @jwt_required()
 def api_get_expenes():
     user_id = int(get_jwt_identity())
-    expenses = Expense.query.filter_by(user_id=user_id).all()
-    return jsonify([{
-        "id": e.ex_id,
-        "description": e.description,
-        "amount": e.amount,
-        "source": e.source,
-        "category": e.category
-    } for e in expenses])
 
+    #pagination paramaters from query string like /api./expenes?page=1&limit=20
+    try:
+        page = int(request.args.get("page", 1))
+        limit = int(request.args.get("limit", 20))
+    except (ValueError, TypeError):
+        page = 1
+        limit = 20
+    #optional filters
+    category = request.args.get("category")
+    from_date = request.args.get("from")
+    to_date = request.args.get("to")
+
+    query = Expense.query.filter_by(user_id=user_id)
+
+    if category:
+        query = query.filter(Expense.category == category)
+    if from_date:
+        query = query.filter(Expense.date >= from_date)
+    if to_date:
+        query = query.filter(Expense.date <= to_date)
+
+    # order before count/paginate
+    total = query.count()
+    expenses = query.order_by(Expense.date.desc()).offset((page - 1) * limit).limit(limit).all()
+        
+
+
+    return jsonify({
+        "expenses": [{
+            "id": e.ex_id,
+            "description": e.description,
+            "amount": e.amount,
+            "date": e.date,
+            "source": e.source,
+            "category": e.category
+        } for e in expenses],
+        "pagination": {
+            "page": page,
+            "limit": limit,
+            "total": total,
+            "pages": (total + limit - 1) // limit,
+            "has_next": page * limit < total,
+            "has_prev": page > 1
+        }
+    })
 @expenses_api_bp.route("/api/expenses", methods=["POST"])
 @jwt_required()
 def api_create_expense():
