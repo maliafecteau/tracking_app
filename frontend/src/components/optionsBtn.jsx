@@ -50,7 +50,7 @@ const OptionsBtn = ({ idKey, itemType })  => {
             
     return (
         <div className="options-container" ref={menuRef}>
-            <button onClick={() => setIsOpen(!isOpen)} className="options-btn">&hellip;</button>
+            <button onClick={() => setIsOpen(!isOpen)} className="options-btn">. . .</button>
         
         {isOpen && (
             <div className="dropdown-content">
