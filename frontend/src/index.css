@@ -257,7 +257,7 @@ input[type="text"], input[type="password"], input[type="email"], input[type="num
   padding: 10px;
   border: 2px solid rgb(210, 188, 151);
   border-radius: 5px;
-  width: 90%;
+  width: 35%;
 }
 
 table {
@@ -309,4 +309,141 @@ table th, table td {
   width: 100%;
   height: 100%;
   padding: 5%;
+}
+
+.login-page {
+  width: min(540px, 92%);
+  min-height: 580px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.9rem;
+  text-align: left;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(69, 47, 31, 0.12);
+  box-shadow: 0 14px 28px rgba(69, 47, 31, 0.12);
+}
+
+.login-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: rgba(69, 47, 31, 0.75);
+  text-align: left;
+}
+
+.login-title {
+  font-size: 1.65rem;
+  line-height: 1.2;
+  color: rgba(69, 47, 31, 0.95);
+  text-align: left;
+  padding: 0;
+}
+
+.login-copy {
+  color: rgba(69, 47, 31, 0.85);
+  text-align: left;
+  margin-bottom: 0.2rem;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.95rem;
+  padding: 1rem;
+  border-radius: 0.85rem;
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(69, 47, 31, 0.14);
+}
+
+.login-field {
+  align-items: stretch;
+  gap: 0.4rem;
+}
+
+.login-field label {
+  font-weight: 700;
+  color: rgba(69, 47, 31, 0.9);
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form input[type="email"] {
+  width: 100%;
+  border: 2px solid rgba(114, 136, 78, 0.38);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.login-form input[type="text"]:focus,
+.login-form input[type="password"]:focus,
+.login-form input[type="email"]:focus {
+  outline: none;
+  border-color: rgb(114, 136, 78);
+  box-shadow: 0 0 0 3px rgba(114, 136, 78, 0.2);
+}
+
+.login-submit {
+  width: 100%;
+  padding: 0.72rem 1rem;
+  font-size: 1rem;
+  background-color: rgb(114, 136, 78);
+  color: white;
+}
+
+.login-submit:hover:enabled {
+  background-color: rgb(98, 118, 66);
+}
+
+.login-submit:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.login-error {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  background-color: rgba(133, 28, 28, 0.11);
+  color: rgb(133, 28, 28);
+  font-weight: 600;
+}
+
+.login-register-copy {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  text-align: left;
+  color: rgba(69, 47, 31, 0.86);
+}
+
+.login-register-btn {
+  align-self: flex-start;
+  background-color: rgb(210, 188, 151);
+  color: #452F1F;
+}
+
+.login-register-btn:hover {
+  background-color: rgb(195, 171, 133);
+}
+
+@media (max-width: 640px) {
+  .login-page {
+    width: 94%;
+    min-height: auto;
+    padding: 1rem;
+  }
+
+  .login-form {
+    min-height: auto;
+  }
+
+  .login-title {
+    font-size: 1.45rem;
+  }
 }
