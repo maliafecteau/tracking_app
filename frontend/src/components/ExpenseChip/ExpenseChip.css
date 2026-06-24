@@ -6,6 +6,7 @@
     border-radius: 25px;
     margin-top: -6px;
     color: white;
+    gap: 10px;
     height: 10%;
     width: 100%;
     background-color: rgb(150, 168, 109);
@@ -22,10 +23,30 @@
 .chip-section {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 5px; 
+    align-items: flex-start;
+    align-self: flex-start;
+    flex: 1 1 20%;
 }
 
-p {
-    color: white;
+.flex-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-self:center;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex: 1 5 0;
+}
 
+.record-chip p {
+    color: white;
+    font-weight: 300;
+}
+
+.category-tag {
+    font-size: 14px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 20px;
+    padding: 8px 15px;
 }

@@ -93,12 +93,14 @@ export default function Expenses() {
     <Base title="Expenses & Bills" header="Your Expenses & Bills">
       <p>Here you can view, manage, and log your expenses and bills.</p>
 
-      <button id="expense-form-btn" type="button" onClick={() => { setShowExpenseForm(true); setShowBillForm(false); }}>
-        Add Expense
-      </button>
-      <button id="bill-form-btn" type="button" onClick={() => { setShowBillForm(true); setShowExpenseForm(false); }}>
-        Add Bill
-      </button>
+      <div className="add-btns">
+        <button id="expense-form-btn" type="button" onClick={() => { setShowExpenseForm(true); setShowBillForm(false); }}>
+          Add Expense
+        </button>
+        <button id="bill-form-btn" type="button" onClick={() => { setShowBillForm(true); setShowExpenseForm(false); }}>
+          Add Bill
+        </button>
+      </div>
 
       <div id="add-expense-form" className={showExpenseForm ? undefined : 'hidden'}>
         <ExpensesForm onSuccess={() => { setShowExpenseForm(false); loadData(); }} />

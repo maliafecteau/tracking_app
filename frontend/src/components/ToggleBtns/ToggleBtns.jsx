@@ -1,3 +1,5 @@
+import './ToggleBtns.css'
+
 export default function ToggleBtns({ options, value, onChange, className = '' }) {
   return (
     <div className={`toggle-buttons ${className}`.trim()}>
