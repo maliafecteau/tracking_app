@@ -36,8 +36,11 @@ export default function Expenses() {
       return
     }
 
-    const expenses = await expensesRes.json()
-    const bills = await billsRes.json()
+    const expensesRaw = await expensesRes.json()
+    const billsRaw = await billsRes.json()
+
+    const expenses = Array.isArray(expensesRaw) ? expensesRaw : (expensesRaw.expenses ?? expensesRaw.data ?? [])
+    const bills = Array.isArray(billsRaw) ? billsRaw : (billsRaw.bills ?? billsRaw.data ?? [])
 
     const merged = [
       ...expenses.map((e) => ({
