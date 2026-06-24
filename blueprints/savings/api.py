@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from sqlalchemy import text
+from sqlalchemy import text, func
+from datetime import datetime, timedelta
 from models import db, Income, Expense, Bill, SavingsGoal
 
 savings_api_bp = Blueprint("savings_api", __name__)
@@ -73,6 +74,63 @@ def get_savings_data(user_id):
         "savings": round(savings, 2),
         "savings_rate": round(savings_rate, 1),
     }
+
+
+@savings_api_bp.route("/api/savings/monthly-summary", methods=["GET"])
+@jwt_required()
+def api_monthly_savings_summary():
+    user_id = int(get_jwt_identity())
+    period_end = datetime.utcnow().date()
+    period_start = period_end - timedelta(days=30)
+    from_date = period_start.isoformat()
+    to_date = period_end.isoformat()
+
+    income_total = (
+        db.session.query(func.coalesce(func.sum(Income.amount), 0))
+        .filter(Income.user_id == user_id)
+        .filter(Income.date >= from_date)
+        .filter(Income.date <= to_date)
+        .scalar()
+    )
+    income_total = round(float(income_total or 0), 2)
+
+    expense_rows = (
+        db.session.query(
+            Expense.category,
+            func.sum(Expense.amount).label("total"),
+        )
+        .filter(Expense.user_id == user_id)
+        .filter(Expense.date >= from_date)
+        .filter(Expense.date <= to_date)
+        .group_by(Expense.category)
+        .all()
+    )
+
+    summary = sorted(
+        [
+            {
+                "category": row.category or "Other",
+                "total": round(float(row.total or 0), 2),
+            }
+            for row in expense_rows
+        ],
+        key=lambda item: item["total"],
+        reverse=True,
+    )
+
+    total_spent = round(sum(item["total"] for item in summary), 2)
+    savings_total = round(income_total - total_spent, 2)
+
+    return jsonify(
+        {
+            "summary": summary,
+            "income_total": income_total,
+            "total_spent": total_spent,
+            "savings_total": savings_total,
+            "from": from_date,
+            "to": to_date,
+        }
+    )
 
 
 @savings_api_bp.route("/api/savings", methods=["GET"])

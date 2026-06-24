@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Base from './base'
 import { apiFetch } from '../utils/api'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 export default function Savings() {
   const [title, setTitle] = useState('')
@@ -20,32 +20,31 @@ export default function Savings() {
   const [isRemoveFundFormOpen, setIsRemoveFundFormOpen] = useState(false)
   const [removeFundAmount, setRemoveFundAmount] = useState('')
   const [selectedGoalIdForRemoval, setSelectedGoalIdForRemoval] = useState(null)
-  const [spendingCategories, setSpendingCategories] = useState([])
-  const [categoryColors, setCategoryColors] = useState({})
+  const [incomeTotal, setIncomeTotal] = useState(0)
+  const [totalSpent, setTotalSpent] = useState(0)
+  const [savingsTotal, setSavingsTotal] = useState(0)
+  const [dateRangeLabel, setDateRangeLabel] = useState('')
 
   useEffect(() => {
     let isMounted = true
 
     async function loadSpending() {
-  const [summaryRes, categoriesRes] = await Promise.all([
-    apiFetch('/api/expenses/summary'),
-    apiFetch('/api/categories'),
-  ])
+      const summaryRes = await apiFetch('/api/savings/monthly-summary')
 
-  if (summaryRes.ok) {
-    const data = await summaryRes.json()
-    setSpendingCategories(data.summary)
-  }
+      if (summaryRes.ok) {
+        const data = await summaryRes.json()
+        if (isMounted) {
+          setIncomeTotal(Number(data.income_total || 0))
+          setTotalSpent(Number(data.total_spent || 0))
+          setSavingsTotal(Number(data.savings_total || 0))
+          const fromText = formatDate(data.from)
+          const toText = formatDate(data.to)
+          setDateRangeLabel(`${fromText} - ${toText}`)
+        }
+      }
+    }
 
-  if (categoriesRes.ok) {
-    const data = await categoriesRes.json()
-    const colorMap = {}
-    data.forEach(c => { colorMap[c.name] = c.color })
-    setCategoryColors(colorMap)
-  }
-}
-
-loadSpending()
+    loadSpending()
 
     async function loadGoals() {
       try {
@@ -102,6 +101,34 @@ loadSpending()
     if (Number.isNaN(parsed.getTime())) return 'No deadline'
 
     return parsed.toLocaleDateString('en-GB')
+  }
+
+  const monthlyChartData = [
+    {
+      period: '1 Month',
+      incomeTotal: Number(incomeTotal || 0),
+      expensesTotal: Number(totalSpent || 0),
+    },
+  ]
+
+  const chartMax = Math.max(Number(incomeTotal || 0), Number(totalSpent || 0), 1)
+
+  function formatCurrencyTick(value) {
+    if (!value) return '$0'
+    return `$${Math.round(value)}`
+  }
+
+  function SavingsTooltip({ active, payload }) {
+    if (!active || !payload || !payload.length) return null
+
+    return (
+      <div className="savings-chart-tooltip">
+        <p><strong>{dateRangeLabel || 'Last 30 Days'}</strong></p>
+        <p>Income: {formatAmount(incomeTotal)}</p>
+        <p>Expenses: {formatAmount(totalSpent)}</p>
+        <p>Savings: {formatAmount(savingsTotal)}</p>
+      </div>
+    )
   }
 
   async function handleSubmit(event) {
@@ -539,29 +566,43 @@ loadSpending()
             </p>
           )}
         </div>
-        {spendingCategories.length > 0 && (
+        {(incomeTotal > 0 || totalSpent > 0) && (
             <div className="savings-chart">
-              <h3>Spending by Category</h3>
-              <ResponsiveContainer width="100%" height={350}>
-                <PieChart>
-                  <Pie
-                    data={spendingCategories}
-                    dataKey="total"
-                    nameKey="category"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={120}
-                  >
-                    {spendingCategories.map((entry) => (
-                      <Cell
-                        key={entry.category}
-                        fill={categoryColors[entry.category] || '#D3D3D3'}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => ['$' + value.toFixed(2), 'Spent']} />
+              <h3>Monthly Financial Summary</h3>
+              <p className="savings-chart-caption">
+                {dateRangeLabel || 'Last 30 Days'}
+              </p>
+              <ResponsiveContainer width="100%" height={320}>
+                <BarChart
+                  data={monthlyChartData}
+                  margin={{ top: 10, right: 12, left: 0, bottom: 0 }}
+                  barGap={-56}
+                  barCategoryGap="48%"
+                >
+                  <CartesianGrid strokeDasharray="4 4" vertical={false} />
+                  <XAxis dataKey="period" />
+                  <YAxis domain={[0, Math.ceil(chartMax * 1.1)]} tickFormatter={formatCurrencyTick} />
+                  <Tooltip content={<SavingsTooltip />} wrapperStyle={{ pointerEvents: 'none' }} />
                   <Legend />
-                </PieChart>
+                  <Bar
+                    dataKey="incomeTotal"
+                    fill="#49854c"
+                    stroke="#468029"
+                    name="Income"
+                    barSize={56}
+                    radius={[8, 8, 0, 0]}
+                    isAnimationActive={false}
+                  />
+                  <Bar
+                    dataKey="expensesTotal"
+                    fill="#d47260"
+                    stroke="#b56d56"
+                    name="Expenses"
+                    barSize={56}
+                    radius={[8, 8, 0, 0]}
+                    isAnimationActive={false}
+                  />
+                </BarChart>
               </ResponsiveContainer>
             </div>
           )}
