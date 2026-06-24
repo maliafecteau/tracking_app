@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, React } from 'react'
 import Base from './base'
+import ExpenseChip from '../components/ExpenseChip/ExpenseChip'
+import { apiFetch } from '../utils/api'
 
 const sampleIncomes = [
   { income_id: 1, amount: 2500, date: '2026-06-01' },
@@ -16,6 +18,28 @@ export default function Income() {
 
   const token = localStorage.getItem('token')
   const authHeader = token ? { Authorization: `Bearer ${token}` } : {}
+
+  async function initialLoad() { // loads the incomes from bank using ahaku
+    setLoading(true)
+    setError('')
+
+    const [incomesRes] = await ([
+      apiFetch('/api/income')
+    ])
+
+    if (!incomesRes.ok) {
+      setError('Unable to load data. Please log in.')
+      setLoading(false)
+      return
+    }
+
+    const incomesRaw = await incomesRes.json()
+
+    const fetchedIncomes = Array.isArray(incomesRaw) ? incomesRaw : (incomesRaw.incomes ?? [])
+
+    setIncomes(fetchedIncomes)
+    setLoading(false)
+  }
 
   async function handleAddIncome(event) {
     event.preventDefault()
@@ -67,6 +91,14 @@ export default function Income() {
     setError(data.error || 'Unable to delete income. Please log in first.')
   }
 
+  const items = [
+    ...incomes.map((i) => ({
+      id: i.income_id,
+      amount: i.amount,
+      date: i.date
+    }))
+  ]
+
   return (
     <Base title="Income" header="Your Income">
       <p>Here you can view, manage, and log your income.</p>
@@ -101,6 +133,18 @@ export default function Income() {
         {message && <p className="form-success">{message}</p>}
         {error && <p className="form-error">{error}</p>}
       </section>
+
+      <div className="expenses-container">
+          {items.map((item) => (
+            <ExpenseChip
+              key={item.id}
+              itemId={item.id}
+              date={item.date}
+              amount={item.amount}
+              onDelete={() => handleDeleteIncome(item.id)}/>
+          ))
+        }
+        </div>
 
       <section className="income-list">
         {incomes.length ? (
