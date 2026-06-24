@@ -1,73 +1,59 @@
-import { useState, React } from 'react'
+import { useState, useEffect } from 'react'
 import Base from './base'
 import ExpenseChip from '../components/ExpenseChip/ExpenseChip'
 import { apiFetch } from '../utils/api'
 
-const sampleIncomes = [
-  { income_id: 1, amount: 2500, date: '2026-06-01' },
-  { income_id: 2, amount: 500, date: '2026-05-15' },
-]
-
-// income page that posts new income to the api and shows a list
 export default function Income() {
   const [amount, setAmount] = useState('')
   const [date, setDate] = useState('')
-  const [incomes, setIncomes] = useState(sampleIncomes)
+  const [description, setDescription] = useState('')
+  const [incomes, setIncomes] = useState([])
+  const [loading, setLoading] = useState(true)
   const [isFormVisible, setIsFormVisible] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
-  const token = localStorage.getItem('token')
-  const authHeader = token ? { Authorization: `Bearer ${token}` } : {}
-
-  const toggleForm = () => {
-    setIsFormVisible((prev) => !prev)
-  }
-
-  async function initialLoad() { // loads the incomes from bank using ahaku
+  async function loadIncomes() {
     setLoading(true)
     setError('')
 
-    const [incomesRes] = await ([
-      apiFetch('/api/income')
-    ])
+    const response = await apiFetch('/api/income')
 
-    if (!incomesRes.ok) {
-      setError('Unable to load data. Please log in.')
+    if (!response.ok) {
+      setError('Unable to load income. Please log in.')
       setLoading(false)
       return
     }
 
-    const incomesRaw = await incomesRes.json()
-
-    const fetchedIncomes = Array.isArray(incomesRaw) ? incomesRaw : (incomesRaw.incomes ?? [])
-
-    setIncomes(fetchedIncomes)
+    const data = await response.json()
+    setIncomes(Array.isArray(data) ? data : (data.incomes ?? []))
     setLoading(false)
   }
+
+  useEffect(() => {
+    loadIncomes()
+  }, [])
 
   async function handleAddIncome(event) {
     event.preventDefault()
     setError('')
     setMessage('')
 
-    const response = await fetch('/api/income', {
+    const response = await apiFetch('/api/income', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeader,
-      },
-      body: JSON.stringify({ amount, date }),
+      body: JSON.stringify({ amount, date, description }),
     })
 
     const data = await response.json()
     if (response.ok) {
       setIncomes((current) => [
         ...current,
-        { income_id: data.id, amount: data.amount, date: data.date },
+        { id: data.id, amount: data.amount, date: data.date, description: data.description }
       ])
       setAmount('')
       setDate('')
+      setDescription('')
+      setIsFormVisible(false)
       setMessage('Income added successfully.')
       return
     }
@@ -79,15 +65,10 @@ export default function Income() {
     setError('')
     setMessage('')
 
-    const response = await fetch(`/api/income/${incomeId}`, {
-      method: 'DELETE',
-      headers: {
-        ...authHeader,
-      },
-    })
+    const response = await apiFetch(`/api/income/${incomeId}`, { method: 'DELETE' })
 
     if (response.ok) {
-      setIncomes((current) => current.filter((income) => income.income_id !== incomeId))
+      setIncomes((current) => current.filter((i) => i.id !== incomeId))
       setMessage('Income deleted successfully.')
       return
     }
@@ -96,25 +77,29 @@ export default function Income() {
     setError(data.error || 'Unable to delete income. Please log in first.')
   }
 
-  const items = [
-    ...incomes.map((i) => ({
-      type: 'income',
-      id: i.income_id,
-      amount: i.amount,
-      date: i.date
-    }))
-  ]
-
   return (
     <Base title="Income" header="Your Income">
       <p>Here you can view, manage, and log your income.</p>
-      <button id="expense-form-btn" type="button" onClick={toggleForm}>
+
+      <button type="button" onClick={() => setIsFormVisible(prev => !prev)}>
         {isFormVisible ? 'Cancel' : 'Add Income +'}
       </button>
+
       {isFormVisible && (
         <section className="income-form">
           <h2>Add New Income</h2>
           <form onSubmit={handleAddIncome}>
+            <div>
+              <label htmlFor="description">Description</label>
+              <input
+                id="description"
+                name="description"
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="e.g. Salary, Freelance"
+              />
+            </div>
             <div>
               <label htmlFor="amount">Amount</label>
               <input
@@ -123,7 +108,7 @@ export default function Income() {
                 type="number"
                 step="0.01"
                 value={amount}
-                onChange={(event) => setAmount(event.target.value)}
+                onChange={(e) => setAmount(e.target.value)}
                 required
               />
             </div>
@@ -134,30 +119,37 @@ export default function Income() {
                 name="date"
                 type="date"
                 value={date}
-                onChange={(event) => setDate(event.target.value)}
+                onChange={(e) => setDate(e.target.value)}
                 required
               />
             </div>
             <button type="submit">Add Income</button>
           </form>
-          {message && <p className="form-success">{message}</p>}
-          {error && <p className="form-error">{error}</p>}
-      </section>
+        </section>
       )}
-      
+
+      {message && <p className="form-success">{message}</p>}
+      {error && <p className="form-error">{error}</p>}
 
       <div className="expenses-container">
-          {items.map((item) => (
+        {loading ? (
+          <p>Loading...</p>
+        ) : incomes.length ? (
+          incomes.map((item) => (
             <ExpenseChip
-              key={`${item.type}-${item.id}`}
+              key={`income-${item.id}`}
               itemId={item.id}
-              type={item.type}
+              type="income"
+              description={item.description || 'Income'}
               date={item.date}
               amount={item.amount}
-              onDelete={() => handleDeleteIncome(item.id)}/>
+              onDelete={() => handleDeleteIncome(item.id)}
+            />
           ))
-        }
-        </div>
+        ) : (
+          <p>No income recorded yet.</p>
+        )}
+      </div>
     </Base>
   )
 }
