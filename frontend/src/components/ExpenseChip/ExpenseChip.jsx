@@ -2,7 +2,7 @@ import './ExpenseChip.css'
 import OptionsBtn from '../OptionsBtn'
 import React from 'react'
 
-export default function ExpenseChip({ itemId, type, description, date, amount, category }) {
+export default function ExpenseChip({ itemId, type, description, date, amount, category, onDelete, onCategoryChange }) {
     return (
         <div className={`record-chip ${type}`}>
             <section  className="chip-section">
@@ -14,7 +14,10 @@ export default function ExpenseChip({ itemId, type, description, date, amount, c
                 <h4>-${amount.toFixed(2)}</h4>
                 <OptionsBtn 
                     idKey={itemId}
-                    itemType={type}/>
+                    itemType={type}
+                    onDelete={onDelete}
+                    onCategoryChange={onCategoryChange}
+                    />
             </section>
         </div>
     )
