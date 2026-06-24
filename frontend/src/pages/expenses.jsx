@@ -87,7 +87,7 @@ export default function Expenses() {
   const items = [
     ...expenses.map((e) => ({
       type: 'expense',
-      id: e.id,
+      id: e.id ?? e.ex_id,
       description: e.description,
       amount: e.amount,
       date: e.date,
@@ -154,15 +154,26 @@ export default function Expenses() {
         {!loading && filteredItems.length > 0 ? (
           filteredItems.map((item) => (
             <ExpenseChip
-              itemID={item.id}
+              itemId={item.id}
               type={item.type}
               description={item.description}
               date={item.date}
               amount={item.amount}
               category={item.category}
               onDelete={() => handleDelete(item.type, item.id)}
+              onCategoryChange={(newCategory) => {
+                if (item.type === 'expense') {
+                  setExpenses((prev) =>
+                    prev.map((expense) =>
+                      (expense.id ?? expense.ex_id) === item.id
+                        ? { ...expense, category: newCategory }
+                        : expense
+                    )
+                  )
+                }
+              }}
               key={`${item.type}-${item.id}`}
-            />
+              />
           ))
         ) : (
           !loading && <p>No expenses or bills yet. Use a button above to add one.</p>
