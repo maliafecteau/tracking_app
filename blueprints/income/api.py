@@ -13,7 +13,8 @@ def api_get_income():
         "id": i.income_id,
         "amount": i.amount,
         "date": i.date,
-        "source": i.source
+        "source": i.source,
+        "description": i.description or "Income"
     } for i in incomes])
 
 

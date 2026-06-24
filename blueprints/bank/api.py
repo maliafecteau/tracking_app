@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.bank_service import get_accounts, get_transactions, categorise_transaction, clean_description, get_akahu_category
 from models import db, Income, Expense
-from models import db, Income, Expense
 
 bank_api_bp = Blueprint("bank_api", __name__)
 
@@ -52,7 +51,14 @@ def api_import_transactions():
             if amount > 0:
                 exists = Income.query.filter_by(external_id=external_id).first()
                 if not exists:
-                    income = Income(amount=amount, date=date, user_id=user_id, source="bank_api", external_id=external_id)
+                    income = Income(
+                        amount=amount,
+                        date=date,
+                        user_id=user_id, 
+                        source="bank_api",
+                        external_id=external_id,
+                        description=description
+                              )
                     db.session.add(income)
                     imported += 1
                 else:
