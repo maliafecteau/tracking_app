@@ -18,6 +18,7 @@ class Income(db.Model): #database model for Income
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     source = db.Column(db.String(50), default="manual")
     external_id = db.Column(db.String(200), nullable=True)
+    description = db.Column(db.String(200), nullable=True)
 
 class Expense(db.Model): #db model for expense
     ex_id = db.Column(db.Integer, primary_key=True)
