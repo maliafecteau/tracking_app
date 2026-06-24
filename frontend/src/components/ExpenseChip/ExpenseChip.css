@@ -1,5 +1,6 @@
 .record-chip {
     display: flex;
+    text-align: left;
     justify-content: space-between;
     align-items: center;
     padding: 15px 20px 21px 20px;
@@ -26,13 +27,13 @@
     gap: 5px; 
     align-items: flex-start;
     align-self: flex-start;
-    flex: 1 1 20%;
+    flex: 1 1 10%;
 }
 
 .flex-section {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15%;
     align-self:center;
     justify-content: flex-end;
     align-items: flex-end;
@@ -49,4 +50,22 @@
     background: rgba(0,0,0,0.25);
     border-radius: 20px;
     padding: 8px 15px;
+}
+
+@media (min-width: 990px) {
+    .chip-section h3 {
+        font-size: 25px;
+        padding: 10px 0;
+    }
+    .chip-section p {
+        font-size: 20px;
+        font-weight: 400;
+        padding: 10px 0;
+    }
+    .flex-section {
+        justify-content: space-between;
+    }
+    .flex-section h4 {
+        font-size: 40px;
+    }
 }
