@@ -325,7 +325,6 @@ const navItems = [
   { id: 2, label: 'Expenses', path: '/expenses', icon: expensesImg },
   { id: 3, label: 'Income', path: '/income', icon: incomeImg },
   { id: 4, label: 'Savings', path: '/savings', icon: savingsImg },
-  { id: 5, label: 'Bank', path: '/bank', icon: settingsImg }
 ];
 
 export default function Navbar() {
@@ -345,7 +344,11 @@ export default function Navbar() {
                     <span className="link-text">{item.label}</span>
                 </Link>
             ))}
-            <button onClick={handleLogout} className="nav-link">
+            <Link to="/bank" title="Settings" id="bottom-icons" className="nav-link">
+                <img src={settingsImg}/>
+                <span className="link-text">Settings</span>
+            </Link>
+            <button onClick={handleLogout} id="bottom-icons" className="nav-link">
                 <img src={userImg}/>
                 <span className="link-text">Logout</span>
             </button>
