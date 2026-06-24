@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import Base from './base'
 import ExpensesForm from './expenses_form'
 import Bill from './bill'
 import { apiFetch } from '../utils/api'
 import ExpenseChip from '../components/ExpenseChip/ExpenseChip'
 import ToggleBtns from '../components/ToggleBtns/ToggleBtns'
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 const LIMIT = 20
 
@@ -20,6 +21,8 @@ export default function Expenses() {
   const [filter, setFilter] = useState('all')
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
+  const [spendingCategories, setSpendingCategories] = useState([])
+  const [categoryColors, setCategoryColors] = useState({})
 
   const filterOptions = [
     { label: 'All', value: 'all' },
@@ -27,7 +30,33 @@ export default function Expenses() {
     { label: 'Bills', value: 'bill' },
   ]
 
-  // Initial load — fetches bills once + first page of expenses
+  async function loadSpending() {
+    try {
+      const [summaryRes, categoriesRes] = await Promise.all([
+        apiFetch('/api/expenses/summary'),
+        apiFetch('/api/categories'),
+      ])
+
+      if (summaryRes.ok) {
+        const data = await summaryRes.json()
+        setSpendingCategories(data.summary || [])
+      }
+
+      if (categoriesRes.ok) {
+        const data = await categoriesRes.json()
+        const colorMap = {}
+
+        data.forEach((category) => {
+          colorMap[category.name] = category.color
+        })
+
+        setCategoryColors(colorMap)
+      }
+    } catch {
+      console.error('Unable to load spending chart data.')
+    }
+  }
+
   async function initialLoad() {
     setLoading(true)
     setError('')
@@ -56,7 +85,6 @@ export default function Expenses() {
     setLoading(false)
   }
 
-  // Load more — appends next page of expenses
   async function loadMore() {
     setLoadingMore(true)
     setError('')
@@ -81,9 +109,9 @@ export default function Expenses() {
 
   useEffect(() => {
     initialLoad()
+    loadSpending()
   }, [])
 
-  // Merge + sort whenever expenses or bills change
   const items = [
     ...expenses.map((e) => ({
       type: 'expense',
@@ -120,6 +148,11 @@ export default function Expenses() {
       setMessage(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully.`)
       setTimeout(() => setMessage(''), 3000)
       initialLoad()
+
+      if (type === 'expense') {
+        loadSpending()
+      }
+
       return
     }
 
@@ -128,56 +161,115 @@ export default function Expenses() {
 
   return (
     <Base title="Expenses & Bills" header="Your Expenses & Bills">
+      {spendingCategories.length > 0 && (
+        <div className="savings-chart">
+          <h3>Spending by Category</h3>
+
+          <ResponsiveContainer width="100%" height={350}>
+            <PieChart>
+              <Pie
+                data={spendingCategories}
+                dataKey="total"
+                nameKey="category"
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+              >
+                {spendingCategories.map((entry) => (
+                  <Cell
+                    key={entry.category}
+                    fill={categoryColors[entry.category] || '#D3D3D3'}
+                  />
+                ))}
+              </Pie>
+
+              <Tooltip formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Spent']} />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
       <p>Here you can view, manage, and log your expenses and bills.</p>
 
       <div className="add-btns">
-        <button id="expense-form-btn" type="button" onClick={() => { setShowExpenseForm(true); setShowBillForm(false) }}>
+        <button
+          id="expense-form-btn"
+          type="button"
+          onClick={() => {
+            setShowExpenseForm(true)
+            setShowBillForm(false)
+          }}
+        >
           Add Expense
         </button>
-        <button id="bill-form-btn" type="button" onClick={() => { setShowBillForm(true); setShowExpenseForm(false) }}>
+
+        <button
+          id="bill-form-btn"
+          type="button"
+          onClick={() => {
+            setShowBillForm(true)
+            setShowExpenseForm(false)
+          }}
+        >
           Add Bill
         </button>
       </div>
 
       <div id="add-expense-form" className={showExpenseForm ? undefined : 'hidden'}>
-        <ExpensesForm onSuccess={() => { setShowExpenseForm(false); initialLoad() }} />
+        <ExpensesForm
+          onSuccess={() => {
+            setShowExpenseForm(false)
+            initialLoad()
+            loadSpending()
+          }}
+        />
       </div>
 
       <div id="add-bill-form" className={showBillForm ? undefined : 'hidden'}>
-        <Bill onSuccess={() => { setShowBillForm(false); initialLoad() }} />
+        <Bill
+          onSuccess={() => {
+            setShowBillForm(false)
+            initialLoad()
+          }}
+        />
       </div>
 
       <ToggleBtns options={filterOptions} value={filter} onChange={setFilter} />
 
-      <div className='expenses-container'>
+      
+      <div className="expenses-container">
         {loading && <p>Loading...</p>}
-        {!loading && filteredItems.length > 0 ? (
-          filteredItems.map((item) => (
-            <ExpenseChip
-              itemId={item.id}
-              type={item.type}
-              description={item.description}
-              date={item.date}
-              amount={item.amount}
-              category={item.category}
-              onDelete={() => handleDelete(item.type, item.id)}
-              onCategoryChange={(newCategory) => {
-                if (item.type === 'expense') {
-                  setExpenses((prev) =>
-                    prev.map((expense) =>
-                      (expense.id ?? expense.ex_id) === item.id
-                        ? { ...expense, category: newCategory }
-                        : expense
-                    )
-                  )
-                }
-              }}
-              key={`${item.type}-${item.id}`}
-              />
-          ))
-        ) : (
-          !loading && <p>No expenses or bills yet. Use a button above to add one.</p>
-        )}
+
+       {!loading && filteredItems.length > 0 ? (
+  filteredItems.map((item) => (
+    <ExpenseChip
+      key={`${item.type}-${item.id}`}
+      itemId={item.id}
+      type={item.type}
+      description={item.description}
+      date={item.date}
+      amount={item.amount}
+      category={item.category}
+      onDelete={() => handleDelete(item.type, item.id)}
+      onCategoryChange={(newCategory) => {
+        if (item.type === 'expense') {
+          setExpenses((prev) =>
+            prev.map((expense) =>
+              (expense.id ?? expense.ex_id) === item.id
+                ? { ...expense, category: newCategory }
+                : expense
+            )
+          )
+
+          loadSpending()
+        }
+      }}
+    />
+  ))
+) : (
+  !loading && <p>No expenses or bills yet. Use a button above to add one.</p>
+)}
 
         {hasMore && !loading && (
           <button type="button" onClick={loadMore} disabled={loadingMore}>

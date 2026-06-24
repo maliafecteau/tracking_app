@@ -18,6 +18,20 @@ function formatOrdinal(day) {
   return `${day}${suffix}`
 }
 
+function chooseRotatingAdvice(adviceData) {
+  const messages =
+    adviceData.messages && adviceData.messages.length > 0
+      ? adviceData.messages
+      : [{ priority: adviceData.priority, message: adviceData.message }]
+
+  const lastIndex = Number(localStorage.getItem('dougalAdviceIndex') ?? '-1')
+  const nextIndex = (lastIndex + 1) % messages.length
+
+  localStorage.setItem('dougalAdviceIndex', String(nextIndex))
+
+  return messages[nextIndex]
+
+}
 export default function Home() {
   const [advice, setAdvice] = useState(null)
 
@@ -38,13 +52,21 @@ export default function Home() {
   const dayInMonth = formatOrdinal(now.getDate())
 
   useEffect(() => {
-    async function loadData() {
+  async function loadData() {
+    try {
       const adviceRes = await apiFetch('/api/advice')
-      if (adviceRes.ok) setAdvice(await adviceRes.json())
-    }
-    loadData()
-  }, [])
+      const data = await adviceRes.json()
 
+      if (adviceRes.ok) {
+        setAdvice(chooseRotatingAdvice(data))
+      }
+    } catch (error) {
+      console.warn('Could not load advice:', error)
+    }
+  }
+
+  loadData()
+}, [])
   return (
     <Base title=" ">
       <h2 className="home-regular">Good {getGreeting()}, <span className="username">{username}</span></h2>
@@ -57,7 +79,7 @@ export default function Home() {
 
         <div className="dashboard-box">
           {advice && (
-            <div className={`speech-bubble ${advice.priority}`}>
+            <div className={`speech-bubble ${advice.priority} speech-bubble--${advice.priority}`}>
               <p>{advice.message}</p>
             </div>
           )}
