@@ -9,16 +9,28 @@ export default function ExpenseChip({ itemId, type, description, date, amount, c
                 <h3>{description}</h3>
                 <p>Date: {date}</p>
             </section>
+            {type === 'income' ? (
             <section className="flex-section">
-                <p className="category-tag">{category}</p>
-                <h4>-${amount.toFixed(2)}</h4>
+                <h4>+${amount.toFixed(2)}</h4>
                 <OptionsBtn 
                     idKey={itemId}
                     itemType={type}
                     onDelete={onDelete}
-                    onCategoryChange={onCategoryChange}
                     />
             </section>
+            ) : (
+            <section className="flex-section">
+                <p className="category-tag">{category}</p>
+                <h4>-${amount.toFixed(2)}</h4>
+                <OptionsBtn 
+                idKey={itemId}
+                itemType={type}
+                onDelete={onDelete}
+                onCategoryChange={onCategoryChange}
+                    />
+            </section>
+            )}
+                
         </div>
     )
 }
