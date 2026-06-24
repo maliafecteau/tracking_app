@@ -325,7 +325,7 @@ const navItems = [
   { id: 2, label: 'Expenses', path: '/expenses', icon: expensesImg },
   { id: 3, label: 'Income', path: '/income', icon: incomeImg },
   { id: 4, label: 'Savings', path: '/savings', icon: savingsImg },
-  { id: 5, label: 'Bank', path: '/bank', icon: settingsImg }
+  { id: 5, label: 'Settings', path: '/bank', icon: settingsImg }
 ];
 
 export default function Navbar() {
