@@ -130,15 +130,20 @@ button {
 #bill-form-btn,
 #expense-form-btn {
   background-color: #96a86d;
-  box-shadow: inset 0 -5px #707E52;
+  box-shadow: 0 5px #707E52;
   filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
-  border-radius: 25px;
-  padding: 6px 15px 11px 15px;
-  margin-top: -6px;
+  border-radius: 999px;
+  min-height: 42px;
+  padding: 10px 30px;
   font-size: 14px;
   font-family: "Josefin Sans";
   font-weight: 450;
   color: white;
+}
+
+#bill-form-btn {
+  background-color: #8C9DAD;
+    box-shadow: 0 5px #697682;
 }
 
 .add-btns {
@@ -395,6 +400,8 @@ table th, table td {
 .login-register-btn:hover {
   background-color: rgb(195, 171, 133);
 }
+
+
 /* savings page */
 .savings-page {
   width: min(540px, 92%);
@@ -457,11 +464,12 @@ table th, table td {
   font-size: 0.95rem;
   color: #f9f6ee;
   letter-spacing: 0.02em;
-  box-shadow: 0 5px 10px rgba(69, 47, 31, 0.2);
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2))
 }
 
 .savings-action-btn--primary {
   background-color: #91a867;
+  box-shadow: 0 5px #707E52;
 }
 
 .savings-action-btn--primary:hover {
@@ -470,6 +478,7 @@ table th, table td {
 
 .savings-action-btn--secondary {
   background-color: #8fa1b7;
+  box-shadow: 0 5px #697682;
 }
 
 .savings-action-btn--secondary:hover {

@@ -14,10 +14,10 @@
     filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2))
 }
 
-.record-chip.bill {
+.record-chip.bill,
+.record-chip.income {
     background-color: #8C9DAD;
     box-shadow: inset 0 -6px #697682;
-
 }
 
 .chip-section {
