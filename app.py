@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -17,6 +18,7 @@ from blueprints.income.api import income_api_bp
 from blueprints.bills.api import bills_api_bp
 from blueprints.savings.api import savings_api_bp
 from blueprints.bank.api import bank_api_bp
+from blueprints.categories import categories_api_bp
 from utils import login_required
 import os
 
@@ -31,6 +33,7 @@ def create_app():
 
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
+    Migrate(app, db)
     JWTManager(app)
 
     app.register_blueprint(auth_bp)
@@ -45,6 +48,7 @@ def create_app():
     app.register_blueprint(bills_api_bp)
     app.register_blueprint(savings_api_bp)
     app.register_blueprint(bank_api_bp)
+    app.register_blueprint(categories_api_bp)
 
     return app
 
