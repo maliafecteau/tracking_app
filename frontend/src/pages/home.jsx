@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import Base from './base'
 import SlothMascot from '../components/SlothMascot'
 import { apiFetch } from '../utils/api'
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -20,9 +19,7 @@ function formatOrdinal(day) {
 }
 
 export default function Home() {
-  const [categories, setCategories] = useState([])
-  const [categoryColors, setCategoryColors] = useState({})
-  const [loading, setLoading] = useState(true)
+  const [advice, setAdvice] = useState(null)
 
   let username
   const savedUser = localStorage.getItem('user')
@@ -42,26 +39,8 @@ export default function Home() {
 
   useEffect(() => {
     async function loadData() {
-      setLoading(true)
-
-      const [summaryRes, categoriesRes] = await Promise.all([
-        apiFetch('/api/expenses/summary'),
-        apiFetch('/api/categories'),
-      ])
-
-      if (summaryRes.ok) {
-        const data = await summaryRes.json()
-        setCategories(data.summary)
-      }
-
-      if (categoriesRes.ok) {
-        const data = await categoriesRes.json()
-        const colorMap = {}
-        data.forEach(c => { colorMap[c.name] = c.color })
-        setCategoryColors(colorMap)
-      }
-
-      setLoading(false)
+      const adviceRes = await apiFetch('/api/advice')
+      if (adviceRes.ok) setAdvice(await adviceRes.json())
     }
     loadData()
   }, [])
@@ -77,38 +56,12 @@ export default function Home() {
         </div>
 
         <div className="dashboard-box">
-          {loading ? (
-            <p>Loading...</p>
-          ) : categories.length > 0 ? (
-            <ResponsiveContainer width="100%" height={350}>
-              <PieChart>
-                <Pie
-                  data={categories}
-                  dataKey="total"
-                  nameKey="category"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  >
-                
-                  {categories.map((entry) => (
-                    <Cell
-                      key={entry.category}
-                      fill={categoryColors[entry.category] || '#D3D3D3'}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value) => ['$' + value.toFixed(2), 'Spent']}
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <p>No spending data yet.</p>
+          {advice && (
+            <div className={`speech-bubble ${advice.priority}`}>
+              <p>{advice.message}</p>
+            </div>
           )}
         </div>
       </div>
     </Base>
-  )
-}
+  )}

@@ -226,3 +226,36 @@
     border-right-color: var(--border);
   }
 }
+.mascot-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.speech-bubble {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  max-width: 220px;
+  text-align: center;
+}
+
+/* little triangle pointing down toward the sloth */
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px 8px 0 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+.speech-bubble.critical { border: 2px solid #e74c3c; color: #e74c3c; }
+.speech-bubble.warning { border: 2px solid #f39c12; color: #f39c12; }
+.speech-bubble.info { border: 2px solid #3498db; color: #3498db; }
+.speech-bubble.positive { border: 2px solid #2ecc71; color: #2ecc71; }

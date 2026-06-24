@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Base from './base'
 import { apiFetch } from '../utils/api'
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 export default function Savings() {
   const [title, setTitle] = useState('')
@@ -19,9 +20,32 @@ export default function Savings() {
   const [isRemoveFundFormOpen, setIsRemoveFundFormOpen] = useState(false)
   const [removeFundAmount, setRemoveFundAmount] = useState('')
   const [selectedGoalIdForRemoval, setSelectedGoalIdForRemoval] = useState(null)
+  const [spendingCategories, setSpendingCategories] = useState([])
+  const [categoryColors, setCategoryColors] = useState({})
 
   useEffect(() => {
     let isMounted = true
+
+    async function loadSpending() {
+  const [summaryRes, categoriesRes] = await Promise.all([
+    apiFetch('/api/expenses/summary'),
+    apiFetch('/api/categories'),
+  ])
+
+  if (summaryRes.ok) {
+    const data = await summaryRes.json()
+    setSpendingCategories(data.summary)
+  }
+
+  if (categoriesRes.ok) {
+    const data = await categoriesRes.json()
+    const colorMap = {}
+    data.forEach(c => { colorMap[c.name] = c.color })
+    setCategoryColors(colorMap)
+  }
+}
+
+loadSpending()
 
     async function loadGoals() {
       try {
@@ -515,6 +539,32 @@ export default function Savings() {
             </p>
           )}
         </div>
+        {spendingCategories.length > 0 && (
+            <div className="savings-chart">
+              <h3>Spending by Category</h3>
+              <ResponsiveContainer width="100%" height={350}>
+                <PieChart>
+                  <Pie
+                    data={spendingCategories}
+                    dataKey="total"
+                    nameKey="category"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={120}
+                  >
+                    {spendingCategories.map((entry) => (
+                      <Cell
+                        key={entry.category}
+                        fill={categoryColors[entry.category] || '#D3D3D3'}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => ['$' + value.toFixed(2), 'Spent']} />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
       </section>
     </Base>
   )
