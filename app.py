@@ -19,6 +19,7 @@ from blueprints.bills.api import bills_api_bp
 from blueprints.savings.api import savings_api_bp
 from blueprints.bank.api import bank_api_bp
 from blueprints.categories import categories_api_bp
+from blueprints.advice import advice_api_bp
 from utils import login_required
 import os
 
@@ -49,6 +50,7 @@ def create_app():
     app.register_blueprint(savings_api_bp)
     app.register_blueprint(bank_api_bp)
     app.register_blueprint(categories_api_bp)
+    app.register_blueprint(advice_api_bp)
 
     return app
 
