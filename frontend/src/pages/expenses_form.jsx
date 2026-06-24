@@ -8,6 +8,8 @@ export default function ExpensesForm({ onSuccess }) {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
+  
+
   async function handleSubmit(event) {
     event.preventDefault()
     setMessage('')
