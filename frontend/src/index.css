@@ -218,10 +218,10 @@ table th, table td {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 0.9rem;
+  gap: 25px;
+  align-items: center;
   text-align: left;
-  padding: 1.5rem;
+  padding: 30px;
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(69, 47, 31, 0.12);
@@ -230,14 +230,13 @@ table th, table td {
 
 .splash-page {
   position: relative;
-  align-items: stretch;
   justify-content: space-between;
 }
 
 .splash-paws {
   position: absolute;
-  top: 0.9rem;
-  right: 0.9rem;
+  top: 20px;
+  right: 20px;
   width: min(92px, 18%);
   height: auto;
   pointer-events: none;
@@ -316,7 +315,6 @@ table th, table td {
 
 .login-copy {
   color: rgba(69, 47, 31, 0.85);
-  text-align: left;
   margin-bottom: 0.2rem;
 }
 
@@ -326,8 +324,8 @@ table th, table td {
   flex-direction: column;
   align-items: stretch;
   gap: 0.95rem;
-  padding: 1rem;
-  border-radius: 0.85rem;
+  padding: 30px;
+  border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(69, 47, 31, 0.14);
 }
@@ -360,10 +358,14 @@ table th, table td {
 
 .login-submit {
   width: 100%;
-  padding: 0.72rem 1rem;
-  font-size: 1rem;
-  background-color: rgb(114, 136, 78);
+  padding: 20px 30px;
+  font-size: 18px;
+  background-color: #96a86d;
+  box-shadow: 0 6px #707E52;
+  filter: drop-shadow(0 5px 3px rgba(0,0,0,0.2));
   color: white;
+  border-radius: 30px;
+  text-decoration: none;
 }
 
 .login-submit:hover:enabled {
@@ -379,7 +381,7 @@ table th, table td {
   width: 100%;
   text-align: left;
   padding: 0.6rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: 30px;
   background-color: rgba(133, 28, 28, 0.11);
   color: rgb(133, 28, 28);
   font-weight: 600;
@@ -393,9 +395,12 @@ table th, table td {
 }
 
 .login-register-btn {
-  align-self: flex-start;
   background-color: rgb(210, 188, 151);
+  border-radius: 30px;
+  padding: 10px 30px;
   color: #452F1F;
+  box-shadow: 0 5px #b39466;
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
 }
 
 .login-register-btn:hover {
