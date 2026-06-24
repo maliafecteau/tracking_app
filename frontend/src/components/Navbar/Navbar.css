@@ -101,6 +101,10 @@
     width: 100%;
     flex-grow: 0;
   }
+
+  #bottom-icons {
+    margin-top: auto;
+  }
 }
 
 @media (min-width: 768px) {
