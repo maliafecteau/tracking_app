@@ -711,6 +711,37 @@ table th, table td {
   padding: 0.9rem;
 }
 
+.savings-chart {
+  width: 100%;
+  max-width: 620px;
+  margin: 0.9rem auto 0;
+  padding: 0.75rem 0.8rem 0.6rem;
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(69, 47, 31, 0.14);
+}
+
+.savings-chart-caption {
+  font-size: 0.9rem;
+  color: rgba(69, 47, 31, 0.8);
+  margin-bottom: 0.35rem;
+}
+
+.savings-chart-tooltip {
+  min-width: 160px;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(69, 47, 31, 0.2);
+  background: rgba(255, 252, 245, 0.96);
+  box-shadow: 0 4px 12px rgba(69, 47, 31, 0.2);
+  text-align: left;
+}
+
+.savings-chart-tooltip p {
+  margin: 0.1rem 0;
+  text-align: left;
+}
+
 @media (max-width: 640px) {
   .login-page {
     width: 94%;
@@ -798,5 +829,9 @@ table th, table td {
   .savings-complete-btn {
     font-size: 0.72rem;
     padding: 0.28rem 0.55rem;
+  }
+
+  .savings-chart {
+    padding: 0.6rem 0.55rem 0.45rem;
   }
 }
