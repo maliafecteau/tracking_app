@@ -1,0 +1,32 @@
+.scroll-btn {
+  position: fixed;
+  background-color: transparent;
+  color: #697682;
+  border: 3px solid #697682;
+  bottom: 16%;
+  right: 2%;
+  border-radius: 35%;
+  width: 35px;
+  height: 35px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, background-color 0.2s ease;
+  z-index: 1000; /* Ensures it sits above other content */
+}
+
+.scroll-btn:hover {
+  background-color: #8C9DAD;
+  color: white;
+  border-color: white;
+}
+
+@media (min-width: 600px) {
+    .scroll-btn {
+        bottom: 5%;
+        right: 5%;
+        width: 60px;
+        height: 60px;
+        font-size: 40px;
+        border: 5px solid #697682;
+    }
+}

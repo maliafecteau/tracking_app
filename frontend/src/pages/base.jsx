@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar/Navbar'
-
+import ScrollTopBtn from '../components/ScrollTop/ScrollTopBtn'
 
 export default function Base({ title, header, children, showNav = true }) {
   const navigate = useNavigate()
@@ -19,6 +19,7 @@ export default function Base({ title, header, children, showNav = true }) {
       {showNav && (
         <Navbar/>
       )}
+      <ScrollTopBtn/>
       <footer><div className="placeholder"/></footer>
     </div>
   )
