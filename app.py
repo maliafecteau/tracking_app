@@ -32,6 +32,8 @@ def seed_categories():
         if not exists:
             category = Category(name=cat["name"], color=cat["color"], user_id=None)
             db.session.add(category)
+        elif exists.color != cat["color"]:
+            exists.color = cat["color"]
     db.session.commit()
 
 

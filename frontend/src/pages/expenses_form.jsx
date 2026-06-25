@@ -35,8 +35,7 @@ export default function ExpensesForm({ onSuccess }) {
   return (
     <section className="expense-form">
       <h2>Add New Expense</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form onSubmit={handleSubmit} >
           <label htmlFor="description">Description</label>
           <input
             id="description"
@@ -46,8 +45,6 @@ export default function ExpensesForm({ onSuccess }) {
             onChange={(event) => setDescription(event.target.value)}
             required
           />
-        </div>
-        <div>
           <label htmlFor="amount">Amount</label>
           <input
             id="amount"
@@ -58,8 +55,6 @@ export default function ExpensesForm({ onSuccess }) {
             onChange={(event) => setAmount(event.target.value)}
             required
           />
-        </div>
-        <div>
           <label htmlFor="date">Date</label>
           <input
             id="date"
@@ -69,7 +64,6 @@ export default function ExpensesForm({ onSuccess }) {
             onChange={(event) => setDate(event.target.value)}
             required
           />
-        </div>
         <button type="submit">Add Expense</button>
       </form>
       {error && <p className="form-error">{error}</p>}

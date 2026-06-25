@@ -33,27 +33,18 @@ p {
 }
 
 .container {
-  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  height: 100%;
+  height: 100vh;
   width: 100%;
-  background-attachment: scroll;
   background-color: #F0DCBB;
-  padding: 75px 0 30% 0;
+  padding: 40px 0 30% 0;
 }
 
 header {
-  background-color: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(5.5px);
-  transition: 0.4s;
-  z-index: 2;
   width: 100%;
-  position: fixed;
-  top: 0;
-  transition: top 0.3s;
 }
 
 main {
@@ -64,7 +55,8 @@ main {
   align-items: center;
   gap: 1rem;
   width: 100%;
-  padding: 5%;
+  padding: 25px 5% 40% 5%;
+  background-color: #F0DCBB;
 }
 
 footer {
@@ -77,7 +69,6 @@ footer {
 
 h1 {
   font-size: 30px;
-  padding: 1rem;
   text-align: center;
   font-family: "Cal Sans", sans-serif;
   text-shadow: 2px 2px 1px rgba(172,127,94,0.5);
@@ -110,9 +101,22 @@ h4 {
 
 button {
   font-family: "Cal Sans", sans-serif;
-  border: none;
+  letter-spacing: 1px;
+  color:rgb(69, 47, 31);
   cursor: pointer;
   background-color: transparent;
+  padding: 10px 20px;
+  border-radius: 20px;
+  transition: 0.3s;
+  border: none;
+}
+
+.other-btn {
+  border: 2px solid rgb(69, 47, 31);
+}
+.other-btn:hover {
+  color: #F0DCBB;
+  background-color: rgb(69, 47, 31);
 }
 
 .btn {
@@ -142,6 +146,11 @@ button {
   color: white;
 }
 
+.expense-form {
+  width: 100%;
+  margin: 0;
+}
+
 #bill-form-btn {
   background-color: #8C9DAD;
     box-shadow: 0 5px #697682;
@@ -164,7 +173,7 @@ form {
   background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(5.5px);
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   width: 80%;
   min-height: 50%;
   height: fit-content;
@@ -179,11 +188,22 @@ form {
   width: 100%;
 }
 
-input[type="text"], input[type="password"], input[type="email"], input[type="number"], input[type="date"] {
+input {
   padding: 10px;
-  border: 2px solid rgb(210, 188, 151);
+  border: none;
   border-radius: 5px;
-  width: 35%;
+  box-shadow: inset 1px 3px 10px rgba(87, 51, 4, 0.356);
+  filter: drop-shadow(-1px -2px rgb(173, 140, 108));
+  width: 100%;
+  font-family: 'Josefin Sans', sans-serif;
+  background-color:rgb(243, 231, 210);
+}
+
+input:focus-visible {
+  outline: none;
+  box-shadow: 1px 3px 4px rgba(210, 188, 151, 0.2);
+  filter: drop-shadow(1px 2px rgb(173, 140, 108));
+  background-color: white;
 }
 
 table {
@@ -340,21 +360,7 @@ table th, table td {
   color: rgba(69, 47, 31, 0.9);
 }
 
-.login-form input[type="text"],
-.login-form input[type="password"],
-.login-form input[type="email"] {
-  width: 100%;
-  border: 2px solid rgba(114, 136, 78, 0.38);
-  background: rgba(255, 255, 255, 0.95);
-}
 
-.login-form input[type="text"]:focus,
-.login-form input[type="password"]:focus,
-.login-form input[type="email"]:focus {
-  outline: none;
-  border-color: rgb(114, 136, 78);
-  box-shadow: 0 0 0 3px rgba(114, 136, 78, 0.2);
-}
 
 .login-submit {
   width: 100%;
@@ -366,10 +372,13 @@ table th, table td {
   color: white;
   border-radius: 30px;
   text-decoration: none;
+  border: none;
 }
 
 .login-submit:hover:enabled {
   background-color: rgb(98, 118, 66);
+  color: white;
+  padding: 20px 30px;
 }
 
 .login-submit:disabled {
@@ -409,6 +418,8 @@ table th, table td {
 
 
 /* savings page */
+
+
 .savings-page {
   width: min(540px, 92%);
   min-height: 580px;
@@ -446,7 +457,7 @@ table th, table td {
   font-size: 0.88rem;
   color: rgba(69, 47, 31, 0.7);
   letter-spacing: 0.02em;
-  transition: background 0.18s ease, color 0.18s ease;
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .savings-tab-btn--active {
@@ -729,11 +740,12 @@ table th, table td {
 .savings-chart {
   width: 100%;
   max-width: 620px;
-  margin: 0.9rem auto 0;
+  margin: 15px auto 0;
   padding: 0.75rem 0.8rem 0.6rem;
   border-radius: 0.9rem;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.699);
   border: 1px solid rgba(69, 47, 31, 0.14);
+  box-shadow: 1px 3px 4px rgba(170, 163, 149, 0.527);
 }
 
 .savings-chart-caption {
@@ -757,7 +769,31 @@ table th, table td {
   text-align: left;
 }
 
+.recharts-surface {
+  display: flex;
+}
+.recharts-legend-item {
+  padding: 5px;
+}
+.recharts-legend-item-text,
+.recharts-legend-wrapper .recharts-legend-item-text {
+  color: #452f1f !important;
+}
+
+@media (min-width: 640px) {
+  p {
+    font-size: 16px;
+  }
+
+  main {
+    padding-bottom: 25px;
+    padding-right: 0;
+    padding-left: 70px;
+  }
+}
+
 @media (max-width: 640px) {
+
   .login-page {
     width: 94%;
     min-height: auto;

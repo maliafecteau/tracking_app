@@ -90,7 +90,7 @@ export default function Bank() {
 
       <section className="bank-transactions">
         <h2>Recent Transactions</h2>
-        <button type="button" onClick={handleImport}>
+        <button className="other-btn" type="button" onClick={handleImport}>
           Import All Transactions
         </button>
         {message && <p className="form-success">{message}</p>}
