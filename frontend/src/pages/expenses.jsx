@@ -161,6 +161,7 @@ export default function Expenses() {
 
   return (
     <Base title="Expenses & Bills" header="Your Expenses & Bills">
+      <p>Here you can view, manage, and log your expenses and bills.</p>
       {spendingCategories.length > 0 && (
         <div className="savings-chart">
           <h3>Spending by Category</h3>
@@ -178,19 +179,18 @@ export default function Expenses() {
                 {spendingCategories.map((entry) => (
                   <Cell
                     key={entry.category}
-                    fill={categoryColors[entry.category] || '#D3D3D3'}
+                    fill={categoryColors[entry.category] || '#d1a881'}
                   />
                 ))}
               </Pie>
 
-              <Tooltip formatter={(value) => [`$${Number(value).toFixed(2)}`, 'Spent']} />
+              <Tooltip formatter={(value, name) => [`$${Number(value).toFixed(2)}`, name]} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
         </div>
       )}
 
-      <p>Here you can view, manage, and log your expenses and bills.</p>
 
       <div className="add-btns">
         <button
@@ -272,7 +272,7 @@ export default function Expenses() {
 )}
 
         {hasMore && !loading && (
-          <button type="button" onClick={loadMore} disabled={loadingMore}>
+          <button className="other-btn" type="button" onClick={loadMore} disabled={loadingMore}>
             {loadingMore ? 'Loading...' : 'Load More'}
           </button>
         )}

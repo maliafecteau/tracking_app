@@ -178,7 +178,7 @@
 }
 
 .dashboard-box {
-  background: #9bb886;
+  background: #8ca075b6;
   border-radius: 18px;
   padding: 1.4rem;
   box-shadow: 0 14px 30px rgba(54, 42, 28, 0.14);
@@ -188,15 +188,15 @@
   position: relative;
   width: 280px;
   min-height: 105px;
-  background: #fffaf0;
-  border: 3px solid #6fa8dc;
+  background-color: rgb(238, 223, 198);
+  box-shadow: 2px 3px #c9b599;
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
   border-radius: 22px;
   padding: 1.1rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  box-shadow: 0 8px 18px rgba(54, 42, 28, 0.12);
   animation: speech-pop 0.22s ease-out;
 }
 
@@ -217,7 +217,8 @@
   transform: translateY(-50%);
   border-top: 16px solid transparent;
   border-bottom: 16px solid transparent;
-  border-right: 20px solid #6fa8dc;
+  box-shadow: 2px 3px #c9b599;
+  filter: drop-shadow(0 4px 3px rgba(0,0,0,0.2));
 }
 
 .speech-bubble::after {
@@ -228,7 +229,8 @@
   transform: translateY(-50%);
   border-top: 12px solid transparent;
   border-bottom: 12px solid transparent;
-  border-right: 16px solid #fffaf0;
+  border-right: 16px solid  rgb(238, 223, 198);
+  filter: drop-shadow(-1px 2px #c9b599);
 }
 
 /* Priority colours */

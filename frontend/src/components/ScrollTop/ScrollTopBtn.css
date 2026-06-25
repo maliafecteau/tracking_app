@@ -12,6 +12,7 @@
   cursor: pointer;
   transition: opacity 0.3s ease, background-color 0.2s ease;
   z-index: 1000; /* Ensures it sits above other content */
+  padding: 0;
 }
 
 .scroll-btn:hover {
@@ -23,7 +24,7 @@
 @media (min-width: 600px) {
     .scroll-btn {
         bottom: 5%;
-        right: 5%;
+        right: 2%;
         width: 60px;
         height: 60px;
         font-size: 40px;

@@ -7,15 +7,15 @@ categories_api_bp = Blueprint("categories_api", __name__)
 # default system categories seeded for every user
 
 SYSTEM_CATEGORIES = [
-    {"name": "Food", "color": "#FF6B6B"},
-    {"name": "Transport", "color": "#4ECDC4"},
-    {"name": "Lifestyle", "color": "#45B7D1"},
-    {"name": "Household", "color": "#96CEB4"},
-    {"name": "Health", "color": "#88D8B0"},
-    {"name": "Education", "color": "#FFEAA7"},
-    {"name": "Entertainment", "color": "#DDA0DD"},
-    {"name": "Shopping", "color": "#F0E68C"},
-    {"name": "Other", "color": "#D3D3D3"},
+    {"name": "Food", "color": "#C75325"},
+    {"name": "Transport", "color": "#6DA3A0"},
+    {"name": "Lifestyle", "color": "#69A764"},
+    {"name": "Household", "color": "#FFF064"},
+    {"name": "Health", "color": "#4E609E"},
+    {"name": "Education", "color": "#E497AE"},
+    {"name": "Entertainment", "color": "#9B629B"},
+    {"name": "Shopping", "color": "#D1821C"},
+    {"name": "Other", "color": "#DBCAA0"},
 ]
 
 @categories_api_bp.route("/api/categories", methods=["GET"])
